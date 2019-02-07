@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "ep-property-pane-client-side-solution",
+    "id": "3741c820-67cb-4bbe-bb3d-0a7a4cd3500d",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true
+  },
+  "paths": {
+    "zippedPackage": "solution/ep-property-pane.sppkg"
+  }
+}
