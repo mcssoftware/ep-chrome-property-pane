@@ -28,7 +28,7 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
         return (
             <div className={styles.propertyPaneEpChromeHost}>
                 <Toggle checked={value.showTitle}
-                    label="Show Title"
+                    label="Show Chrome"
                     onChanged={this._onShowTitleToggleChanged}
                 />
                 <TextField label="Title"
@@ -37,19 +37,15 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                     required={value.showTitle}
                     onChanged={this._onTitleChanged}
                     errorMessage={this._getTitleErrorMessage()} />
-                <Toggle checked={value.showIcon}
+                {/* <Toggle checked={value.showIcon}
                     label="Show Icon"
                     onChanged={this._onShowIconToggleChanged}
-                />
-                <TextField label="Title"
-                    value={value.iconPath}
-                    disabled={!value.showIcon}
-                    errorMessage={this._getTitleErrorMessage()} />
+                /> */}
                 <Dropdown
                     placeholder="Select an Icon"
                     label="Select an Icon"
-                    disabled={!value.showIcon}
-                    required={value.showIcon}
+                    // disabled={!value.showIcon}
+                    // required={value.showIcon}
                     onRenderTitle={this._onRenderTitle}
                     onRenderOption={this._onRenderOption}
                     options={this._iconOptions}
@@ -104,7 +100,6 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
             </div>
         );
     }
-
 
     private _onTitleChanged = (textValue: string): void => {
         const value: IPropertyFieldEpChromeData = cloneDeep(this.state.value);

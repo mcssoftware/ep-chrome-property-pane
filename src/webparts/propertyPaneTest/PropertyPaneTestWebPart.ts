@@ -10,15 +10,17 @@ import {
 import * as strings from 'PropertyPaneTestWebPartStrings';
 import PropertyPaneTest from './components/PropertyPaneTest';
 import { IPropertyPaneTestProps } from './components/IPropertyPaneTestProps';
+import { IPropertyFieldEpChromeData, PropertyFieldEpChrome } from '../../propertyField/epchrome';
 
 export interface IPropertyPaneTestWebPartProps {
   description: string;
+  test: IPropertyFieldEpChromeData;
 }
 
 export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IPropertyPaneTestWebPartProps> {
 
   public render(): void {
-    const element: React.ReactElement<IPropertyPaneTestProps > = React.createElement(
+    const element: React.ReactElement<IPropertyPaneTestProps> = React.createElement(
       PropertyPaneTest,
       {
         description: this.properties.description
@@ -41,14 +43,15 @@ export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IProp
       pages: [
         {
           header: {
-            description: strings.PropertyPaneDescription
+            description: "News Settings"
           },
           groups: [
             {
-              groupName: strings.BasicGroupName,
+              groupName: "Chrome Settings",
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                PropertyFieldEpChrome('test', {
+                  key: "test",
+                  value: this.properties.test
                 })
               ]
             }

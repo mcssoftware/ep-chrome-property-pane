@@ -34,7 +34,7 @@ export interface IPropertyFieldEpChromeProps {
 }
 
 /**
-* Internal properties of PropertyFieldNumber custom field
+* Internal properties of PropertyFieldEpChrome custom field
 */
-export interface IPropertyFieldNumberPropsInternal extends IPropertyPaneCustomFieldProps, IPropertyFieldEpChromeProps {
+export interface IPropertyFieldEpChromePropsInternal extends IPropertyPaneCustomFieldProps, IPropertyFieldEpChromeProps {
 }
