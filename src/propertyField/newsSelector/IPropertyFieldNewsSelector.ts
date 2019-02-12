@@ -1,6 +1,7 @@
 import { IWebPartContext } from "@microsoft/sp-webpart-base";
 import { IPickerTerms } from "./termStoreEntity";
 import { ISPTermStorePickerService } from "../../services/ISPTermStorePickerService";
+import { ISPService } from "../../services/ISPService";
 
 export enum ActiveDisplayModeType {
     Latest = 0,
@@ -123,6 +124,7 @@ export interface IPropertyFieldNewsSelectorProps {
 */
 export interface IPropertyFieldNewsSelectorPropsInternal extends IPropertyFieldNewsSelectorProps {
     termService: ISPTermStorePickerService;
+    spService: ISPService;
     targetProperty: string;
     onRender(elem: HTMLElement): void;
     onDispose(elem: HTMLElement): void;

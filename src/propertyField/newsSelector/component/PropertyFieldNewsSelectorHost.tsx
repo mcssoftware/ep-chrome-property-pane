@@ -16,6 +16,7 @@ import { IPickerTerms, IPickerTerm } from "../termStoreEntity";
 import { ActiveDisplayModeType, IPropertyFieldNewsSelectorData, getPropertyFieldDefaultValue } from "../IPropertyFieldNewsSelector";
 import { ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react/lib-es2015/ChoiceGroup";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dropdown";
+import { ISPService } from "../../../services/ISPService";
 
 /**
  * Image URLs / Base64
@@ -32,6 +33,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
   private async: Async;
   private delayedValidate: (value: IPropertyFieldNewsSelectorData) => void;
   private termsService: ISPTermStorePickerService;
+  private spService: ISPService;
   private previousValues: IPropertyFieldNewsSelectorData = getPropertyFieldDefaultValue();
   private cancel: boolean = true;
 
@@ -41,6 +43,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
   constructor(props: IPropertyFieldNewsSelectorHostProps) {
     super(props);
     this.termsService = props.termService;
+    this.spService = props.spService;
     this.state = {
       activeValues: typeof this.props.initialValues !== "undefined" ? this.props.initialValues : getPropertyFieldDefaultValue(),
       // activeNodes: typeof this.props.initialValues !== "undefined" ? this.props.initialValues : [],

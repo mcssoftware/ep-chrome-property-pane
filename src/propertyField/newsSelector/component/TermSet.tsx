@@ -2,11 +2,10 @@ import * as React from 'react';
 import { Spinner, SpinnerType } from 'office-ui-fabric-react/lib/Spinner';
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { ITermSetProps, ITermSetState } from './IPropertyFieldNewsSelectorHost';
-import { ITerm, TermStorePickerServiceHelper } from '../../services/ISPTermStorePickerService';
 import { EXPANDED_IMG, COLLAPSED_IMG, TERMSET_IMG } from './PropertyFieldNewsSelectorHost';
 import Term from './Term';
 import styles from './PropertyFieldNewsSelectorHost.module.scss';
-import * as strings from 'PropertyControlStrings';
+import { ITerm, TermStorePickerServiceHelper } from '../../../services/ISPTermStorePickerService';
 
 /**
  * Term set component
@@ -128,7 +127,7 @@ export default class TermSet extends React.Component<ITermSetProps, ITermSetStat
             </div>
           );
         } else {
-          termElm = <div className={`${styles.listItem} ${styles.term}`}>{strings.TermPickerNoTerms}</div>;
+          termElm = <div className={`${styles.listItem} ${styles.term}`}>Term set does not contain any terms</div>;
         }
       } else {
         termElm = <Spinner type={SpinnerType.normal} />;
@@ -138,7 +137,7 @@ export default class TermSet extends React.Component<ITermSetProps, ITermSetStat
     return (
       <div>
         <div className={`${styles.listItem} ${styles.termset} ${this.props.isTermSetSelectable ? styles.termSetSelectable : ""}`} onClick={this._handleClick}>
-          <img src={this.state.expanded ? EXPANDED_IMG : COLLAPSED_IMG} alt={strings.TermPickerExpandTitle} title={strings.TermPickerExpandTitle} />
+          <img src={this.state.expanded ? EXPANDED_IMG : COLLAPSED_IMG} alt="Expand this Term Set" title="Expand this Term Set" />
 
           {
             // Show the termset selection box
@@ -148,7 +147,7 @@ export default class TermSet extends React.Component<ITermSetProps, ITermSetStat
               onChange={this.termSetSelectionChange} />
           }
 
-          <img src={TERMSET_IMG} alt={strings.TermPickerMenuTermSet} title={strings.TermPickerMenuTermSet} /> {this.props.termset.Name}
+          <img src={TERMSET_IMG} alt="Menu for Term Set" title="Menu for Term Set" /> {this.props.termset.Name}
         </div>
         <div style={styleProps}>
           {termElm}

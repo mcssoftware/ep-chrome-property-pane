@@ -7,6 +7,8 @@ import { ISPTermStorePickerService } from "../../services/ISPTermStorePickerServ
 import { IPropertyFieldNewsSelectorHostProps } from "./component/IPropertyFieldNewsSelectorHost";
 import PropertyFieldNewsSelectorHost from "./component/PropertyFieldNewsSelectorHost";
 import SPTermStorePickerService from "../../services/SPTermStorePickerService";
+import SPService from "../../services/SPService";
+import { ISPService } from "../../services/ISPService";
 
 /**
  * Represents a PropertyFieldTermPicker object.
@@ -31,12 +33,13 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
     private isTermSetSelectable: boolean;
     private disabledTermIds: string[];
     private termService: ISPTermStorePickerService;
+    private spService: ISPService;
 
     public onPropertyChange(propertyPath: string, oldValue: any, newValue: any): void { }
     private customProperties: any;
     private key: string;
     private disabled: boolean = false;
-    private onGetErrorMessage: (value: IPickerTerms) => string | Promise<string>;
+    private onGetErrorMessage: (value: IPropertyFieldNewsSelectorData) => string | Promise<string>;
     private deferredValidationTime: number = 200;
 
     /**
@@ -61,6 +64,7 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
         this.isTermSetSelectable = _properties.isTermSetSelectable;
         this.disabledTermIds = _properties.disabledTermIds;
         this.termService = _properties.termService;
+        this.spService = _properties.spService;
 
         if (_properties.disabled === true) {
             this.disabled = _properties.disabled;
@@ -106,7 +110,8 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
             disabled: this.disabled,
             onGetErrorMessage: this.onGetErrorMessage,
             deferredValidationTime: this.deferredValidationTime,
-            termService: this.termService
+            termService: this.termService,
+            spService: this.spService
         });
 
         // Calls the REACT content generator
@@ -135,6 +140,7 @@ export function PropertyFieldTermPicker(targetProperty: string, properties: IPro
         targetProperty: targetProperty,
         onRender: null,
         onDispose: null,
-        termService: null, //new SPTermStorePickerService(properties, properties.context)
+        termService: new SPTermStorePickerService(properties, properties.context),
+        spService: new SPService(properties.context)
     });
 }
