@@ -14,11 +14,11 @@
   "requiresCustomScript": false,
 
   "preconfiguredEntries": [{
-    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
-    "group": { "default": "Other" },
-    "title": { "default": "propertyPaneTest" },
+    "groupId": "997d6a20-d8ed-455e-a71d-a2cf4f2a27a6", // Other
+    "group": { "default": "EP Tester" },
+    "title": { "default": "Property Pane" },
     "description": { "default": "Webpart to test property pane" },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "TestSuite",
     "properties": {
       "description": "propertyPaneTest"
     }

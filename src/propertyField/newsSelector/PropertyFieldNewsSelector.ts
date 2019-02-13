@@ -132,7 +132,7 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
  * @param targetProperty - Target property the SharePoint list picker is associated to.
  * @param properties - Strongly typed SPList Picker properties.
  */
-export function PropertyFieldTermPicker(targetProperty: string, properties: IPropertyFieldNewsSelectorProps): IPropertyPaneField<IPropertyFieldNewsSelectorPropsInternal> {
+export function PropertyFieldNewsSelector(targetProperty: string, properties: IPropertyFieldNewsSelectorProps): IPropertyPaneField<IPropertyFieldNewsSelectorPropsInternal> {
     // Calls the PropertyFieldTermPicker builder object
     // This object will simulate a PropertyFieldCustom to manage his rendering process
     return new PropertyFieldNewsSelectorBuilder(targetProperty, {

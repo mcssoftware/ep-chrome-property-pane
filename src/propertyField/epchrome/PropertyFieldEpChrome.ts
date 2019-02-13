@@ -15,7 +15,6 @@ class PropertyFieldEpChromeBuilder implements IPropertyPaneField<IPropertyFieldE
     public constructor(_targetProperty: string, _properties: IPropertyFieldEpChromePropsInternal) {
         this.targetProperty = _targetProperty;
         this.properties = _properties;
-
         this.properties.onRender = this._render.bind(this);
         this.properties.onDispose = this._dispose.bind(this);
     }
@@ -24,7 +23,8 @@ class PropertyFieldEpChromeBuilder implements IPropertyPaneField<IPropertyFieldE
         const props: IPropertyFieldEpChromeProps = <IPropertyFieldEpChromeProps>this.properties;
         const element = React.createElement(PropertPaneEpChromeHost, {
             ...props,
-            onChanged: this._onChanged.bind(this)
+            targetProperty: this.targetProperty,
+            onChange: this._onChanged.bind(this)
         });
         ReactDOM.render(element, elem);
         if (changeCallback) {
@@ -36,9 +36,9 @@ class PropertyFieldEpChromeBuilder implements IPropertyPaneField<IPropertyFieldE
         ReactDOM.unmountComponentAtNode(elem);
     }
 
-    private _onChanged(value: IPropertyFieldEpChromeData): void {
+    private _onChanged(targetProperty?: string, value?: IPropertyFieldEpChromeData): void {
         if (this._onChangeCallback) {
-            this._onChangeCallback(this.targetProperty, value);
+            this._onChangeCallback(targetProperty, value);
         }
     }
 }
@@ -46,6 +46,7 @@ class PropertyFieldEpChromeBuilder implements IPropertyPaneField<IPropertyFieldE
 export function PropertyFieldEpChrome(targetProperty: string, properties: IPropertyFieldEpChromeProps): IPropertyPaneField<IPropertyFieldEpChromePropsInternal> {
     return new PropertyFieldEpChromeBuilder(targetProperty, {
         ...properties,
+        targetProperty: targetProperty,
         onRender: null,
         onDispose: null
     });

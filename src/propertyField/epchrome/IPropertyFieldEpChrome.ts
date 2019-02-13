@@ -1,12 +1,18 @@
 import { IPropertyPaneCustomFieldProps } from '@microsoft/sp-webpart-base';
 
 export interface IPropertyFieldEpChromeData {
-    isActive: boolean;
     title?: string;
     showTitle: boolean;
-    showIcon: boolean;
-    iconPath?: string;
+    iconPath: string;
 }
+
+export const getEpChromeDataDefaultValues = (): IPropertyFieldEpChromeData => {
+    return {
+        iconPath: "",
+        showTitle: false,
+        title: "",
+    };
+};
 
 export interface IPropertyFieldEpChromeProps {
     key: string;
@@ -31,10 +37,17 @@ export interface IPropertyFieldEpChromeProps {
    *
    */
     onGetErrorMessage?: (value: IPropertyFieldEpChromeData) => string | Promise<string>;
+    /**
+     * Defines a onPropertyChange function to raise when the selected value changed.
+     * Normally this function must be always defined with the 'this.onPropertyChange'
+     * method of the web part object.
+     */
+    onPropertyChange(propertyPath: string, oldValue: any, newValue: any): void;
 }
 
 /**
 * Internal properties of PropertyFieldEpChrome custom field
 */
 export interface IPropertyFieldEpChromePropsInternal extends IPropertyPaneCustomFieldProps, IPropertyFieldEpChromeProps {
+    targetProperty: string;
 }

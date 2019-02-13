@@ -9,7 +9,7 @@ import TermPicker from "./TermPicker";
 import { IPropertyFieldNewsSelectorHostProps, IPropertyFieldNewsSelectorHostState } from "./IPropertyFieldNewsSelectorHost";
 import { ITermStore, ITerm, ISPTermStorePickerService } from "../../../services/ISPTermStorePickerService";
 import styles from "./PropertyFieldNewsSelectorHost.module.scss";
-import { sortBy, uniqBy, cloneDeep, clone } from "@microsoft/sp-lodash-subset";
+import { sortBy, uniqBy, cloneDeep } from "@microsoft/sp-lodash-subset";
 import TermGroup from "./TermGroup";
 import FieldErrorMessage from "../../errorMessage/FieldErrorMessage";
 import { IPickerTerms, IPickerTerm } from "../termStoreEntity";
@@ -17,6 +17,7 @@ import { ActiveDisplayModeType, IPropertyFieldNewsSelectorData, getPropertyField
 import { ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react/lib-es2015/ChoiceGroup";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dropdown";
 import { ISPService } from "../../../services/ISPService";
+import Header from "../../header/header";
 
 /**
  * Image URLs / Base64
@@ -289,9 +290,10 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
    * Renders the SPListpicker controls with Office UI  Fabric
    */
   public render(): JSX.Element {
+    const label: string = this.props.label || "News Selector";
     return (
       <div>
-        {this.props.label && <Label>{this.props.label}</Label>}
+        <Header title={label} />
         <table className={styles.termFieldTable}>
           <tbody>
             <tr>
@@ -316,8 +318,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
             <tr>
               <td colSpan={2}>
                 <ChoiceGroup
-                  defaultSelectedKey="B"
-                  selectedKey={this.state.activeValues.ActiveDisplayMode}
+                  selectedKey={this.state.activeValues.ActiveDisplayMode.toString()}
                   options={[
                     {
                       key: ActiveDisplayModeType.Latest.toString(),
