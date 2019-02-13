@@ -15,6 +15,7 @@
 }
 
 .termFieldTable {
+  margin-top: 8px;
   border-spacing: 0;
   width: 100%;
 
@@ -130,4 +131,15 @@
 
 .termBasePicker {
   max-width: 255px;
+}
+
+.displayModeChoice {
+  :global .ms-ChoiceField-wrapper {
+    width: 100%;
+  }
+}
+
+.pageSelectorDdl {
+  margin-top: 8px;
+  margin-left: 8px;
 }

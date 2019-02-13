@@ -77,8 +77,8 @@ export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IProp
                   onGetErrorMessage: this._validation,
                   panelTitle: "News Selector Panel",
                   limitByGroupNameOrID: "ElevatePoint",
-                  limitByTermsetNameOrID: "Department",
-                  properties: {},
+                  limitByTermsetNameOrID: "News Channel",
+                  properties: this.properties,
                   onPropertyChange: this.onPropertyChanged
                 })
               ]

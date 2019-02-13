@@ -75,8 +75,8 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
         if (typeof _properties.allowMultipleSelections !== 'undefined') {
             this.allowMultipleSelections = _properties.allowMultipleSelections;
         }
-        if (typeof _properties.initialValues !== 'undefined') {
-            this.initialValues = _properties.initialValues;
+        if (typeof this.customProperties !== "undefined" && typeof this.customProperties[_targetProperty] !== 'undefined' || this.customProperties[_targetProperty] !== null) {
+            this.initialValues = this.customProperties[_targetProperty];
         }
         if (typeof _properties.excludeSystemGroup !== 'undefined') {
             this.excludeSystemGroup = _properties.excludeSystemGroup;

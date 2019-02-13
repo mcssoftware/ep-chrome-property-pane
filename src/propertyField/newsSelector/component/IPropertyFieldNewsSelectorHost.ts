@@ -1,6 +1,7 @@
 import { IPropertyFieldNewsSelectorPropsInternal, IPropertyFieldNewsSelectorData } from "../IPropertyFieldNewsSelector";
 import { ITermStore, ITerm, IGroup, ISPTermStorePickerService, ITermSet } from "../../../services/ISPTermStorePickerService";
 import { IPickerTerms } from "../termStoreEntity";
+import { IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dropdown";
 
 /**
  * PropertyFieldNewsSelectorHost properties interface
@@ -16,8 +17,10 @@ export interface IPropertyFieldNewsSelectorHostState {
   termStores?: ITermStore[];
   errorMessage?: string;
   openPanel?: boolean;
-  loaded?: boolean;
+  termStoreLoaded?: boolean;
+  pagesLoaded: boolean;
   activeValues: IPropertyFieldNewsSelectorData;
+  pageDropDownOptions: IDropdownOption[];
   // activeNodes?: IPickerTerms;
 }
 

@@ -10,8 +10,8 @@ export enum ActiveDisplayModeType {
 
 export interface IPropertyFieldNewsSelectorData {
     ActiveDisplayMode: ActiveDisplayModeType;
-    NewsChannel?: IPickerTerms;
-    ArticleId?: number;
+    NewsChannel: IPickerTerms;
+    ArticleId: number;
 }
 
 export const getPropertyFieldDefaultValue = (): IPropertyFieldNewsSelectorData => {

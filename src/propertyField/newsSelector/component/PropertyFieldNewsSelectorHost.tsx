@@ -5,7 +5,6 @@ import { Panel, PanelType } from "office-ui-fabric-react/lib/Panel";
 import { Spinner, SpinnerType } from "office-ui-fabric-react/lib/Spinner";
 import { Label } from "office-ui-fabric-react/lib/Label";
 import TermPicker from "./TermPicker";
-
 import { IPropertyFieldNewsSelectorHostProps, IPropertyFieldNewsSelectorHostState } from "./IPropertyFieldNewsSelectorHost";
 import { ITermStore, ITerm, ISPTermStorePickerService } from "../../../services/ISPTermStorePickerService";
 import styles from "./PropertyFieldNewsSelectorHost.module.scss";
@@ -18,6 +17,8 @@ import { ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react/lib-es20
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dropdown";
 import { ISPService } from "../../../services/ISPService";
 import Header from "../../header/header";
+import { initGlobalVars } from "../../../common/ep";
+// import { initGlobalVars } from 'ep';
 
 /**
  * Image URLs / Base64
@@ -45,15 +46,17 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
     super(props);
     this.termsService = props.termService;
     this.spService = props.spService;
+    const activeValues = typeof this.props.initialValues !== "undefined" ? this.props.initialValues : getPropertyFieldDefaultValue();
     this.state = {
-      activeValues: typeof this.props.initialValues !== "undefined" ? this.props.initialValues : getPropertyFieldDefaultValue(),
-      // activeNodes: typeof this.props.initialValues !== "undefined" ? this.props.initialValues : [],
+      activeValues,
       termStores: [],
-      loaded: false,
+      termStoreLoaded: false,
       openPanel: false,
-      errorMessage: ""
+      errorMessage: this.validateInternal(activeValues),
+      pageDropDownOptions: this.getEmptyDropDownOption(),
+      pagesLoaded: true,
     };
-
+    initGlobalVars();
     this.onOpenPanel = this.onOpenPanel.bind(this);
     this.onClosePanel = this.onClosePanel.bind(this);
     this.onSave = this.onSave.bind(this);
@@ -65,6 +68,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
     this.delayedValidate = this.async.debounce(this.validate, this.props.deferredValidationTime);
     this.onDisplayModeChange = this.onDisplayModeChange.bind(this);
     this.onArticleDropDownChanged = this.onArticleDropDownChanged.bind(this);
+    this.onRenderDropDownTitle = this.onRenderDropDownTitle.bind(this);
   }
 
   /**
@@ -76,27 +80,61 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
       if (response !== null) {
         this.setState({
           termStores: response,
-          loaded: true
+          termStoreLoaded: true
         });
       } else {
         this.setState({
           termStores: [],
-          loaded: true
+          termStoreLoaded: true
         });
       }
     });
   }
 
   /**
+   * Loads list items from Sharepoint pages library
+   *
+   * @private
+   * @memberof PropertyFieldNewsSelectorHost
+   */
+  private loadPages(value: IPropertyFieldNewsSelectorData): void {
+    if (this.isvalidateNewsChannel(value)) {
+      this.setState({ pagesLoaded: false || this.state.openPanel, pageDropDownOptions: this.getEmptyDropDownOption() });
+      const camlQuery: string = "<View><ViewFields><FieldRef Name='ID' /><FieldRef Name='Title' /></ViewFields>" +
+        `<Query><Where><Eq><FieldRef Name='News_x0020_Channel' /><Value Type='TaxonomyFieldType'>${value.NewsChannel[0].name}</Value></Eq></Where></Query>` +
+        "</View>";
+      this.spService.getListItemsCaml(camlQuery, "Pages", window.Epmodern.urls.newsUrl).then((pages) => {
+        const pageDropDownOptions: IDropdownOption[] = this.getEmptyDropDownOption();
+        pages.filter((f) => typeof f.Title === "string" && f.Title.trim().length > 0).forEach(f => {
+          pageDropDownOptions.push({
+            key: f.Id.toString(),
+            text: f.Title.trim()
+          });
+        });
+        this.setState({ pagesLoaded: true, pageDropDownOptions });
+      });
+    } else {
+      this.setState({ pageDropDownOptions: this.getEmptyDropDownOption() });
+    }
+  }
+
+  private getEmptyDropDownOption(): IDropdownOption[] {
+    return [{ key: "0", text: "Select Page" }];
+  }
+
+  /**
    * Validates the new custom field value
    */
   private validate(value: IPropertyFieldNewsSelectorData): void {
-    if (this.props.onGetErrorMessage === null || this.props.onGetErrorMessage === undefined) {
-      this.notifyAfterValidate(this.props.initialValues, value);
-      return;
+    const internalResult: string = this.validateInternal(value);
+    if (internalResult.length < 1) {
+      if (this.props.onGetErrorMessage === null || this.props.onGetErrorMessage === undefined) {
+        this.notifyAfterValidate(this.props.initialValues, value);
+        return;
+      }
     }
 
-    const result: string | PromiseLike<string> = this.props.onGetErrorMessage(value || getPropertyFieldDefaultValue());
+    const result: string | PromiseLike<string> = internalResult.length > 0 ? internalResult : this.props.onGetErrorMessage(value || getPropertyFieldDefaultValue());
     if (typeof result !== "undefined") {
       if (typeof result === "string") {
         if (result === "") {
@@ -118,6 +156,28 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
     } else {
       this.notifyAfterValidate(this.props.initialValues, value);
     }
+  }
+
+  private validateInternal(value: IPropertyFieldNewsSelectorData): string {
+    if (typeof value === "undefined" || value === null) {
+      return "";
+    }
+    if (!this.isvalidateNewsChannel(value)) {
+      return "Please select news channel";
+    }
+    const articleIdValid: boolean = typeof value.ArticleId !== "undefined" && value.ArticleId !== null && !isNaN(parseFloat(value.ArticleId.toString())) && isFinite(value.ArticleId);
+    if ((value.ActiveDisplayMode === ActiveDisplayModeType.Specific) && !articleIdValid) {
+      return "Please select article";
+    }
+    return "";
+  }
+
+  private isvalidateNewsChannel(value: IPropertyFieldNewsSelectorData): boolean {
+    const newsChannel = value.NewsChannel;
+    if (typeof newsChannel === "undefined" || newsChannel === null || !Array.isArray(newsChannel) || newsChannel.length < 1) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -151,7 +211,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
 
     this.setState({
       openPanel: true,
-      loaded: false
+      termStoreLoaded: false
     });
   }
 
@@ -163,7 +223,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
     this.setState(() => {
       const newState: IPropertyFieldNewsSelectorHostState = {
         openPanel: false,
-        loaded: false
+        termStoreLoaded: false
       } as IPropertyFieldNewsSelectorHostState;
 
       // Check if the property has to be reset
@@ -222,24 +282,30 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
     }
     // Sort all active nodes
     activeValues.NewsChannel = sortBy(activeValues.NewsChannel, "path");
+    activeValues.ArticleId = 0;
+    activeValues.ActiveDisplayMode = ActiveDisplayModeType.Latest;
     // Update the current state
     this.setState({
       activeValues: activeValues
     });
+    this.loadPages(activeValues);
   }
 
   /**
- * Fires When Items Changed in TermPicker
- * @param node
- */
+  * Fires When Items Changed in TermPicker
+  * @param node
+  */
   private termsFromPickerChanged(terms: IPickerTerms): void {
     const activeValues = cloneDeep(this.state.activeValues);
     activeValues.NewsChannel = terms;
+    activeValues.ArticleId = 0;
+    activeValues.ActiveDisplayMode = ActiveDisplayModeType.Latest;
     this.delayedValidate(activeValues);
 
     this.setState({
       activeValues
     });
+    this.loadPages(activeValues);
   }
 
   private onDisplayModeChange(ev?: React.FormEvent<HTMLElement | HTMLInputElement>, option?: IChoiceGroupOption): void {
@@ -286,6 +352,10 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
     }
   }
 
+  public componentDidMount(): void {
+    this.loadPages(this.state.activeValues);
+  }
+
   /**
    * Renders the SPListpicker controls with Office UI  Fabric
    */
@@ -296,6 +366,11 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
         <Header title={label} />
         <table className={styles.termFieldTable}>
           <tbody>
+            <tr>
+              <td colSpan={2}>
+                <Label>Select News Channel</Label>
+              </td>
+            </tr>
             <tr>
               <td>
                 <TermPicker
@@ -319,6 +394,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
               <td colSpan={2}>
                 <ChoiceGroup
                   selectedKey={this.state.activeValues.ActiveDisplayMode.toString()}
+                  className={styles.displayModeChoice}
                   options={[
                     {
                       key: ActiveDisplayModeType.Latest.toString(),
@@ -332,8 +408,11 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
                           <div>
                             {render!(props)}
                             <Dropdown
-                              defaultSelectedKey=""
-                              options={[]}
+                              className={styles.pageSelectorDdl}
+                              selectedKey={this.state.activeValues.ArticleId.toString()}
+                              onRenderTitle={this.onRenderDropDownTitle}
+                              options={this.state.pageDropDownOptions}
+                              required={this.state.activeValues.ActiveDisplayMode === ActiveDisplayModeType.Specific}
                               disabled={this.state.activeValues.ActiveDisplayMode === ActiveDisplayModeType.Latest}
                               onChanged={this.onArticleDropDownChanged}
                             />
@@ -369,17 +448,13 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
               </div>
             );
           }}>
-
           {
             /* Show spinner in the panel while retrieving terms */
-            this.state.loaded === false ? <Spinner type={SpinnerType.normal} /> : ""
+            this.state.termStoreLoaded === false ? <Spinner type={SpinnerType.normal} /> : ""
           }
-
           {
-
             /* Once the state is loaded, start rendering the term store, group, term sets */
-            this.state.loaded === true ? this.state.termStores.map((termStore: ITermStore, index: number) => {
-
+            this.state.termStoreLoaded === true ? this.state.termStores.map((termStore: ITermStore, index: number) => {
               return (
                 <div key={termStore.Id}>
                   {
@@ -406,4 +481,15 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
       </div>
     );
   }
+
+  private onRenderDropDownTitle(options: IDropdownOption[]): JSX.Element {
+    const option = options[0];
+    return (
+      <div>
+        {!this.state.pagesLoaded && <Spinner type={SpinnerType.normal} />}
+        {this.state.pagesLoaded && <span>{option.text}</span>}
+      </div>
+    );
+  }
+
 }
