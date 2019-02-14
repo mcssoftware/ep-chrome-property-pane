@@ -92,17 +92,20 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
   }
 
   /**
-   * Loads list items from Sharepoint pages library
-   *
-   * @private
-   * @memberof PropertyFieldNewsSelectorHost
-   */
+  * Loads list items from Sharepoint pages library
+  *
+  * @private
+  * @memberof PropertyFieldNewsSelectorHost
+  */
   private loadPages(value: IPropertyFieldNewsSelectorData): void {
     if (this.isvalidateNewsChannel(value)) {
       this.setState({ pagesLoaded: false || this.state.openPanel, pageDropDownOptions: this.getEmptyDropDownOption() });
-      const camlQuery: string = "<View><ViewFields><FieldRef Name='ID' /><FieldRef Name='Title' /></ViewFields>" +
-        `<Query><Where><Eq><FieldRef Name='News_x0020_Channel' /><Value Type='TaxonomyFieldType'>${value.NewsChannel[0].name}</Value></Eq></Where></Query>` +
-        "</View>";
+      const now: string = new Date(Date.now()).toISOString();
+      const camlQuery: string = "<View><Query><Where>" +
+        `<And><And><Lt><FieldRef Name='ArticleStartDate' /><Value Type='DateTime'>${now}</Value></Lt>` +
+        `<Gt><FieldRef Name='News_x0020_Article_x0020_Expiration_x0020_Date' /><Value Type='DateTime'>${now}</Value></Gt></And>` +
+        `<Eq><FieldRef Name='News_x0020_Channel' /><Value Type='TaxonomyFieldType'>${value.NewsChannel[0].name}</Value></Eq>` +
+        "</And></Where></Query><ViewFields><FieldRef Name='ID' /><FieldRef Name='Title' /></ViewFields><RowLimit>200</RowLimit></View>";
       this.spService.getListItemsCaml(camlQuery, "Pages", window.Epmodern.urls.newsUrl).then((pages) => {
         const pageDropDownOptions: IDropdownOption[] = this.getEmptyDropDownOption();
         pages.filter((f) => typeof f.Title === "string" && f.Title.trim().length > 0).forEach(f => {
