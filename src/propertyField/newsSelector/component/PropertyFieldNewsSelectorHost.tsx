@@ -18,7 +18,6 @@ import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dro
 import { ISPService } from "../../../services/ISPService";
 import Header from "../../header/header";
 import { initGlobalVars } from "../../../common/ep";
-// import { initGlobalVars } from 'ep';
 
 /**
  * Image URLs / Base64
@@ -44,6 +43,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
    */
   constructor(props: IPropertyFieldNewsSelectorHostProps) {
     super(props);
+    initGlobalVars();
     this.termsService = props.termService;
     this.spService = props.spService;
     const activeValues = typeof this.props.initialValues !== "undefined" ? this.props.initialValues : getPropertyFieldDefaultValue();
@@ -55,8 +55,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
       errorMessage: this.validateInternal(activeValues),
       pageDropDownOptions: this.getEmptyDropDownOption(),
       pagesLoaded: true,
-    };
-    initGlobalVars();
+    };    
     this.onOpenPanel = this.onOpenPanel.bind(this);
     this.onClosePanel = this.onClosePanel.bind(this);
     this.onSave = this.onSave.bind(this);

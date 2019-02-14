@@ -1,16 +1,16 @@
 import { IPropertyPaneCustomFieldProps } from '@microsoft/sp-webpart-base';
 
 export interface IPropertyFieldEpChromeData {
-    title?: string;
-    showTitle: boolean;
-    iconPath: string;
+    Title?: string;
+    ShowTitle: boolean;
+    IconPath: string;
 }
 
 export const getEpChromeDataDefaultValues = (): IPropertyFieldEpChromeData => {
     return {
-        iconPath: "",
-        showTitle: false,
-        title: "",
+        IconPath: "",
+        ShowTitle: false,
+        Title: "",
     };
 };
 

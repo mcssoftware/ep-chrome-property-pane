@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { IPropertyFieldEpChromeData, getEpChromeDataDefaultValues } from "../IPropertyFieldEpChrome";
 import { IPropertyPaneEpChromeHostProps, IPropertyPaneEpChromeHostState } from "./IPropertyPaneEpChromeHost";
 import styles from "./PropertyPaneEpChromeHost.module.scss";
@@ -16,9 +16,9 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
         this.validate = this.validate.bind(this);
         this.state = {
             value: {
-                iconPath: tempValue.iconPath || defaultValues.iconPath,
-                showTitle: tempValue.showTitle || defaultValues.showTitle,
-                title: tempValue.title || defaultValues.title
+                IconPath: tempValue.IconPath || defaultValues.IconPath,
+                ShowTitle: tempValue.ShowTitle || defaultValues.ShowTitle,
+                Title: tempValue.Title || defaultValues.Title
             }
         };
     }
@@ -31,7 +31,7 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                 <Header title={label} />
                 <div className={styles.row}>
                     <div className={styles.column}>
-                        <Toggle checked={value.showTitle}
+                        <Toggle checked={value.ShowTitle}
                             label="Show Chrome"
                             onChanged={this._onShowTitleToggleChanged}
                         />
@@ -40,9 +40,9 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                 <div className={styles.row}>
                     <div className={styles.column}>
                         <TextField label="Title"
-                            value={value.title}
-                            disabled={!value.showTitle}
-                            required={value.showTitle}
+                            value={value.Title}
+                            disabled={!value.ShowTitle}
+                            required={value.ShowTitle}
                             onChanged={this._onTitleChanged}
                             errorMessage={this._getTitleErrorMessage()} />
                     </div>
@@ -50,7 +50,7 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                 <div className={styles.row}>
                     <div className={styles.column}>
                         <TextField label="Icon Url"
-                            value={value.iconPath}
+                            value={value.IconPath}
                             onChanged={this._onIconUrlChanged}
                         />
                     </div>
@@ -61,34 +61,34 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
 
     private _onShowTitleToggleChanged = (checked: boolean): void => {
         const value = cloneDeep(this.state.value);
-        value.showTitle = checked;
+        value.ShowTitle = checked;
         this.setState({ value });
         this.validate(value);
     }
 
     private _onTitleChanged = (textValue: string): void => {
         const value: IPropertyFieldEpChromeData = cloneDeep(this.state.value);
-        value.title = textValue;
+        value.Title = textValue;
         this.setState({ value });
         this.validate(value);
     }
 
     private _onIconUrlChanged = (textValue: string): void => {
         const value: IPropertyFieldEpChromeData = cloneDeep(this.state.value);
-        value.iconPath = textValue;
+        value.IconPath = textValue;
         this.setState({ value });
         this.validate(value);
     }
 
     private _getTitleErrorMessage = (): string => {
         const { value } = this.state;
-        if (value.showTitle && value.title.trim().length === 0) {
+        if (value.ShowTitle && value.Title.trim().length === 0) {
             return "Title is required";
         }
         return "";
     }
 
-    /**
+   /**
    * Validates the new custom field value
    */
     private validate(value: IPropertyFieldEpChromeData): void {

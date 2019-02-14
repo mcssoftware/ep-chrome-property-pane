@@ -3,8 +3,7 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  IPropertyPaneConfiguration
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'PropertyPaneTestWebPartStrings';
@@ -13,11 +12,14 @@ import { IPropertyPaneTestProps } from './components/IPropertyPaneTestProps';
 import { IPropertyFieldEpChromeData, PropertyFieldEpChrome } from '../../propertyField/epchrome';
 import { PropertyFieldNewsSelector, IPropertyFieldNewsSelectorData } from '../../propertyField/newsSelector';
 import { get, update } from '@microsoft/sp-lodash-subset';
+import { IPropertyFieldCalendarData, PropertyFieldCalendar } from '../../propertyField/calendar';
+import { ListPickerOrderByType } from '../../services/ISPService';
 
 export interface IPropertyPaneTestWebPartProps {
   description: string;
   test: IPropertyFieldEpChromeData;
   newsSelector: IPropertyFieldNewsSelectorData;
+  calendarSelector: IPropertyFieldCalendarData;
 }
 
 export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IPropertyPaneTestWebPartProps> {
@@ -66,7 +68,19 @@ export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IProp
                   value: this.properties.test,
                   label: "Test Settings",
                   onPropertyChange: this.onPropertyChanged,
-                }),
+                })
+              ]
+            }
+          ]
+        },
+        {
+          header: {
+            description: "News Settings"
+          },
+          groups: [
+            {
+              groupName: "Settings",
+              groupFields: [
                 PropertyFieldNewsSelector("newsSelector", {
                   key: "newsSelector",
                   context: this.context,
@@ -80,6 +94,29 @@ export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IProp
                   limitByTermsetNameOrID: "News Channel",
                   properties: this.properties,
                   onPropertyChange: this.onPropertyChanged
+                })
+              ]
+            }
+          ]
+        },
+        {
+          header: {
+            description: "News Settings"
+          },
+          groups: [
+            {
+              groupName: "Settings",
+              groupFields: [
+                PropertyFieldCalendar("calendarSelector", {
+                  key: "calendarSelector",
+                  context: this.context,
+                  includeHiddenList: false,
+                  label: "Calendar",
+                  onGetErrorMessage: null,
+                  listBaseTemplate: 106,
+                  value: this.properties.calendarSelector,
+                  onPropertyChange: this.onPropertyChanged,
+                  listOrderBy: ListPickerOrderByType.Title
                 })
               ]
             }

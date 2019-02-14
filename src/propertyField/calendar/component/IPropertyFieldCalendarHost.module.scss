@@ -1,0 +1,23 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.propertyPaneCalendarHost {
+  .row {
+    @include ms-Grid-row;
+  }
+
+  .column {
+    @include ms-Grid-col;
+    @include ms-lg12;
+  }
+
+  .displayModeChoice {
+    :global .ms-ChoiceField-wrapper {
+      width: 100%;
+    }
+  }
+
+  .pageSelectorDdl {
+    margin-top: 8px;
+    margin-left: 8px;
+  }
+}
