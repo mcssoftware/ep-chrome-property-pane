@@ -43,7 +43,9 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
    */
   constructor(props: IPropertyFieldNewsSelectorHostProps) {
     super(props);
-    initGlobalVars();
+    if (typeof window.Epmodern === "undefined") {
+      initGlobalVars();
+  }
     this.termsService = props.termService;
     this.spService = props.spService;
     const activeValues = typeof this.props.initialValues !== "undefined" ? this.props.initialValues : getPropertyFieldDefaultValue();

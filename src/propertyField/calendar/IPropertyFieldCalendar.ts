@@ -1,4 +1,3 @@
-import { IPropertyPaneCustomFieldProps, IWebPartContext } from '@microsoft/sp-webpart-base';
 import { ISPService, IListPickerProps } from '../../services/ISPService';
 
 export enum CalendarDisplayModeType {
@@ -39,7 +38,7 @@ export interface IPropertyFieldCalendarProps extends IListPickerProps{
     /**
     * WebPart's context
     */
-    context: IWebPartContext;
+    context: any;
     /**
      * The method is used to get the validation error message and determine whether the input value is valid or not.
      *

@@ -1,4 +1,3 @@
-import { IWebPartContext } from "@microsoft/sp-webpart-base";
 import { IPickerTerms } from "./termStoreEntity";
 import { ISPTermStorePickerService } from "../../services/ISPTermStorePickerService";
 import { ISPService } from "../../services/ISPService";
@@ -49,7 +48,7 @@ export interface IPropertyFieldNewsSelectorProps {
     /**
      * WebPart's context
      */
-    context: IWebPartContext;
+    context: any;
     /**
      * Limit the term sets that can be used by the group name or ID
      */

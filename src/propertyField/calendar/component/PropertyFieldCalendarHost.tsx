@@ -19,7 +19,9 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
 
     constructor(props: IPropertyPaneCalendarHostProps) {
         super(props);
-        initGlobalVars();
+        if (typeof window.Epmodern === "undefined") {
+            initGlobalVars();
+        }
         this.spService = props.spService;
         const tempValue: IPropertyFieldCalendarData = props.value || {} as IPropertyFieldCalendarData;
         const defaultValues = getCalendarDataDefaultValues();
