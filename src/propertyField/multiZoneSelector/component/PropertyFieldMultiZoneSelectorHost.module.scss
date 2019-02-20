@@ -1,0 +1,30 @@
+@import "~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss";
+
+.propertyFieldMultiZoneNewsSelectorHost {
+  min-width: 300px;
+
+  .row {
+    @include ms-Grid-row;
+  }
+
+  .column {
+    @include ms-Grid-col;
+    @include ms-lg12;
+  }
+
+  .bgwrapper {
+    display: "flex";
+  }
+
+  .column2 {
+    @include ms-Grid-col;
+    @include ms-lg2;
+  }
+
+  .bgcolorSquare {
+    width: 100;
+    height: 100;
+    margin: "16px 0";
+    border: "1px solid #c8c6c4";
+  }
+}

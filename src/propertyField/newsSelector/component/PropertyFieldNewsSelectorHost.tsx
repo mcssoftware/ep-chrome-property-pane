@@ -12,7 +12,7 @@ import { sortBy, uniqBy, cloneDeep } from "@microsoft/sp-lodash-subset";
 import TermGroup from "./TermGroup";
 import FieldErrorMessage from "../../errorMessage/FieldErrorMessage";
 import { IPickerTerms, IPickerTerm } from "../termStoreEntity";
-import { ActiveDisplayModeType, IPropertyFieldNewsSelectorData, getPropertyFieldDefaultValue } from "../IPropertyFieldNewsSelector";
+import { ActiveDisplayModeType, IPropertyFieldNewsSelectorData, getPropertyFieldNewsSelectorDefaultValue } from "../IPropertyFieldNewsSelector";
 import { ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react/lib-es2015/ChoiceGroup";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dropdown";
 import { ISPService } from "../../../services/ISPService";
@@ -35,7 +35,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
   private delayedValidate: (value: IPropertyFieldNewsSelectorData) => void;
   private termsService: ISPTermStorePickerService;
   private spService: ISPService;
-  private previousValues: IPropertyFieldNewsSelectorData = getPropertyFieldDefaultValue();
+  private previousValues: IPropertyFieldNewsSelectorData = getPropertyFieldNewsSelectorDefaultValue();
   private cancel: boolean = true;
 
   /**
@@ -45,10 +45,10 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
     super(props);
     if (typeof window.Epmodern === "undefined") {
       initGlobalVars();
-  }
+    }
     this.termsService = props.termService;
     this.spService = props.spService;
-    const activeValues = typeof this.props.initialValues !== "undefined" ? this.props.initialValues : getPropertyFieldDefaultValue();
+    const activeValues = typeof this.props.value !== "undefined" ? this.props.value : getPropertyFieldNewsSelectorDefaultValue();
     this.state = {
       activeValues,
       termStores: [],
@@ -57,7 +57,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
       errorMessage: this.validateInternal(activeValues),
       pageDropDownOptions: this.getEmptyDropDownOption(),
       pagesLoaded: true,
-    };    
+    };
     this.onOpenPanel = this.onOpenPanel.bind(this);
     this.onClosePanel = this.onClosePanel.bind(this);
     this.onSave = this.onSave.bind(this);
@@ -133,16 +133,16 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
     const internalResult: string = this.validateInternal(value);
     if (internalResult.length < 1) {
       if (this.props.onGetErrorMessage === null || this.props.onGetErrorMessage === undefined) {
-        this.notifyAfterValidate(this.props.initialValues, value);
+        this.notifyAfterValidate(this.props.value, value);
         return;
       }
     }
 
-    const result: string | PromiseLike<string> = internalResult.length > 0 ? internalResult : this.props.onGetErrorMessage(value || getPropertyFieldDefaultValue());
+    const result: string | PromiseLike<string> = internalResult.length > 0 ? internalResult : this.props.onGetErrorMessage(value || getPropertyFieldNewsSelectorDefaultValue());
     if (typeof result !== "undefined") {
       if (typeof result === "string") {
         if (result === "") {
-          this.notifyAfterValidate(this.props.initialValues, value);
+          this.notifyAfterValidate(this.props.value, value);
         }
         this.setState({
           errorMessage: result
@@ -150,7 +150,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
       } else {
         result.then((errorMessage: string) => {
           if (typeof errorMessage === "undefined" || errorMessage === "") {
-            this.notifyAfterValidate(this.props.initialValues, value);
+            this.notifyAfterValidate(this.props.value, value);
           }
           this.setState({
             errorMessage: errorMessage
@@ -158,7 +158,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
         });
       }
     } else {
-      this.notifyAfterValidate(this.props.initialValues, value);
+      this.notifyAfterValidate(this.props.value, value);
     }
   }
 
@@ -189,7 +189,6 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
    */
   private notifyAfterValidate(oldValue: IPropertyFieldNewsSelectorData, newValue: IPropertyFieldNewsSelectorData) {
     if (this.props.onPropertyChange && newValue !== null) {
-      this.props.properties[this.props.targetProperty] = newValue;
       this.props.onPropertyChange(this.props.targetProperty, oldValue, newValue);
       // Trigger the apply button
       if (typeof this.props.onChange !== "undefined" && this.props.onChange !== null) {
@@ -361,13 +360,16 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
   }
 
   /**
-   * Renders the SPListpicker controls with Office UI  Fabric
+   * Renders the news selector control with Office UI  Fabric
+   *
+   * @returns {JSX.Element}
+   * @memberof PropertyFieldNewsSelectorHost
    */
   public render(): JSX.Element {
     const label: string = this.props.label || "News Selector";
     return (
       <div>
-        <Header title={label} />
+        {this.props.showHeader && <Header title={label} />}
         <table className={styles.termFieldTable}>
           <tbody>
             <tr>

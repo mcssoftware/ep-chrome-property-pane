@@ -1,30 +1,107 @@
-import { IPickerTerms } from "./termStoreEntity";
+import { IPropertyFieldNewsSelectorData as IPropertyFieldSelectorData, getPropertyFieldNewsSelectorDefaultValue } from "../newsSelector";
 import { ISPTermStorePickerService } from "../../services/ISPTermStorePickerService";
 import { ISPService } from "../../services/ISPService";
 
-export enum ActiveDisplayModeType {
-    Latest = 0,
-    Specific
+export enum ZoneDataType {
+    Article = 0,
+    Video,
+    Content
 }
 
-export interface IPropertyFieldNewsSelectorData {
-    ActiveDisplayMode: ActiveDisplayModeType;
-    NewsChannel: IPickerTerms;
-    ArticleId: number;
+export function getZoneDataType(value: number) {
+    if (value === ZoneDataType.Article) {
+        return ZoneDataType.Article;
+    }
+    if (value === ZoneDataType.Video) {
+        return ZoneDataType.Video;
+    }
+    return ZoneDataType.Content;
 }
 
-export const getPropertyFieldNewsSelectorDefaultValue = (): IPropertyFieldNewsSelectorData => {
+export interface IContentData {
+    backgroundUrl: string;
+    backgroundColor: string;
+    targetUrl: string;
+    iconUrl: string;
+}
+
+export interface IVideoData {
+    url: string;
+}
+
+export interface IZoneData {
+    type: ZoneDataType;
+    data: IContentData | IVideoData | IPropertyFieldSelectorData;
+}
+
+export interface IPropertyPaneMultiZoneSelectorData extends Array<IZoneData> { }
+
+/**
+* Get default value for Content Zone 
+* @returns {IContentData}
+*/
+export const getContentDataDefaultValue = (): IContentData => {
     return {
-        ActiveDisplayMode: ActiveDisplayModeType.Latest,
-        ArticleId: 0,
-        NewsChannel: []
+        backgroundColor: "#ffffff",
+        backgroundUrl: "",
+        targetUrl: "",
+        iconUrl: "",
     };
+};
+
+/**
+* Get default value for Video Zone
+* @returns {IVideoData}
+*/
+export const getVideoDataDefaultValue = (): IVideoData => {
+    return {
+        url: ""
+    };
+};
+
+/**
+* Get default value for Article Zone
+* @returns {IPropertyFieldSelectorData}
+*/
+export const getArticleDataDefaultValue = (): IPropertyFieldSelectorData => {
+    return getPropertyFieldNewsSelectorDefaultValue();
+};
+
+/**
+* Get default value for zone, if type is specified it gets default value for that type
+*
+* @param {ZoneDataType} [type]
+* @returns {IZoneData}
+*/
+export const getZoneDefaultValue = (type?: ZoneDataType): IZoneData => {
+    if (typeof type === "undefined") {
+        type = ZoneDataType.Content;
+    }
+    let data: IContentData | IVideoData | IPropertyFieldSelectorData;
+    switch (type) {
+        case ZoneDataType.Article: data = getArticleDataDefaultValue(); break;
+        case ZoneDataType.Video: data = getVideoDataDefaultValue(); break;
+        default: data = getContentDataDefaultValue(); break;
+    }
+    return {
+        type,
+        data
+    };
+};
+
+/**
+* Get default value for all zones.
+*
+* @returns {IPropertyPaneMultiZoneSelectorData}
+*/
+export const getPropertyFieldMultiZoneNewsSelectorDefaultValue = (): IPropertyPaneMultiZoneSelectorData => {
+    return [];
 };
 
 /**
  * Public properties of the PropertyFieldTermPicker custom field
  */
-export interface IPropertyFieldNewsSelectorProps {
+export interface IPropertyFieldMultiZoneSelectorProps {
     /**
      * Property field label displayed on top
      */
@@ -38,9 +115,13 @@ export interface IPropertyFieldNewsSelectorProps {
      */
     allowMultipleSelections?: boolean;
     /**
+     * Define number of zones
+     */
+    numberOfZones: number;
+    /**
      * Defines the selected by default term sets.
      */
-    value?: IPropertyFieldNewsSelectorData;
+    value?: IPropertyPaneMultiZoneSelectorData;
     /**
      * Indicator to define if the system Groups are exclude. Default is false.
      */
@@ -64,10 +145,6 @@ export interface IPropertyFieldNewsSelectorProps {
      */
     onPropertyChange(propertyPath: string, oldValue: any, newValue: any): void;
     /**
-     * Parent Web Part properties
-     */
-    // properties: any;
-    /**
      * An UNIQUE key indicates the identity of this control
      */
     key: string;
@@ -88,7 +165,7 @@ export interface IPropertyFieldNewsSelectorProps {
      *   - The rejected, the value is thrown away.
      *
      */
-    onGetErrorMessage?: (value: IPropertyFieldNewsSelectorData) => string | Promise<string>;
+    onGetErrorMessage?: (value: IPropertyPaneMultiZoneSelectorData) => string | Promise<string>;
     /**
      * Custom Field will start to validate after users stop typing for `deferredValidationTime` milliseconds.
      * Default value is 200.
@@ -121,7 +198,7 @@ export interface IPropertyFieldNewsSelectorProps {
 * by the PropertyFieldCustom, witout asking to the developer to add it when he's using
 * the PropertyFieldTermPicker.
 */
-export interface IPropertyFieldNewsSelectorPropsInternal extends IPropertyFieldNewsSelectorProps {
+export interface IPropertyFieldMultiZoneSelectorPropsInternal extends IPropertyFieldMultiZoneSelectorProps {
     termService: ISPTermStorePickerService;
     spService: ISPService;
     targetProperty: string;

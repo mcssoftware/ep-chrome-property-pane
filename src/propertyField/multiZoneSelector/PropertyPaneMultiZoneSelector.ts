@@ -1,49 +1,50 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
+import { IPropertyFieldMultiZoneSelectorPropsInternal, IPropertyPaneMultiZoneSelectorData, getPropertyFieldMultiZoneNewsSelectorDefaultValue, IPropertyFieldMultiZoneSelectorProps } from "./IPropertyPaneMultiZoneSelector";
 import { IPropertyPaneField, PropertyPaneFieldType, IWebPartContext } from "@microsoft/sp-webpart-base";
-import { IPropertyFieldNewsSelectorPropsInternal, IPropertyFieldNewsSelectorProps, IPropertyFieldNewsSelectorData, getPropertyFieldNewsSelectorDefaultValue } from "./IPropertyFieldNewsSelector";
 import { ISPTermStorePickerService } from "../../services/ISPTermStorePickerService";
-import { IPropertyFieldNewsSelectorHostProps } from "./component/IPropertyFieldNewsSelectorHost";
-import PropertyFieldNewsSelectorHost from "./component/PropertyFieldNewsSelectorHost";
+import { ISPService } from "../../services/ISPService";
 import SPTermStorePickerService from "../../services/SPTermStorePickerService";
 import SPService from "../../services/SPService";
-import { ISPService } from "../../services/ISPService";
+import { IPropertyFieldMultiZoneSelectorHostProps } from "./component/IPropertyFieldMultiZoneSelectorHost";
+import { PropertyFieldMultiZoneNewsSelectorHost } from "./component/PropertyFieldMultiZoneSelectorHost";
 
 /**
  * Represents a PropertyFieldTermPicker object.
  * NOTE: INTERNAL USE ONLY
  * @internal
  */
-class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFieldNewsSelectorPropsInternal> {
-    // Properties defined by IPropertyPaneField
+class PropertyPaneMultiZoneNewsSelectorBuilder implements IPropertyPaneField<IPropertyFieldMultiZoneSelectorPropsInternal>{
     public type: PropertyPaneFieldType = PropertyPaneFieldType.Custom;
     public targetProperty: string;
-    public properties: IPropertyFieldNewsSelectorPropsInternal;
-    // Custom properties label: string;
+    public shouldFocus?: boolean;
+    public properties: IPropertyFieldMultiZoneSelectorPropsInternal;
+
     private label: string;
     private context: IWebPartContext;
-    private allowMultipleSelections: boolean = false;
-    private propertyValue: IPropertyFieldNewsSelectorData = getPropertyFieldNewsSelectorDefaultValue();
-    private excludeSystemGroup: boolean = false;
+    private key: string;
+    private panelTitle: string;
     private limitByGroupNameOrID: string = null;
     private limitByTermsetNameOrID: string = null;
-    private panelTitle: string;
     private hideTermStoreName: boolean;
     private isTermSetSelectable: boolean;
     private disabledTermIds: string[];
     private termService: ISPTermStorePickerService;
     private spService: ISPService;
+    private allowMultipleSelections: boolean = false;
+    private excludeSystemGroup: boolean = false;
+    private numberOfZones: number;
+    private propertyValue: IPropertyPaneMultiZoneSelectorData = getPropertyFieldMultiZoneNewsSelectorDefaultValue();
 
     public onPropertyChange(propertyPath: string, oldValue: any, newValue: any): void { }
-    private key: string;
     private disabled: boolean = false;
-    private onGetErrorMessage: (value: IPropertyFieldNewsSelectorData) => string | Promise<string>;
+    private onGetErrorMessage: (value: IPropertyPaneMultiZoneSelectorData) => string | Promise<string>;
     private deferredValidationTime: number = 200;
 
     /**
    * Constructor method
    */
-    public constructor(_targetProperty: string, _properties: IPropertyFieldNewsSelectorPropsInternal) {
+    public constructor(_targetProperty: string, _properties: IPropertyFieldMultiZoneSelectorPropsInternal) {
         this.render = this.render.bind(this);
         this.targetProperty = _targetProperty;
         this.properties = _properties;
@@ -62,6 +63,7 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
         this.disabledTermIds = _properties.disabledTermIds;
         this.termService = _properties.termService;
         this.spService = _properties.spService;
+        this.numberOfZones = _properties.numberOfZones || 6;
 
         if (_properties.disabled === true) {
             this.disabled = _properties.disabled;
@@ -81,15 +83,16 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
     }
 
     /**
-     * Renders the SPListPicker field content
+     * Renders the Multi Zone News Selector field content
      */
     private render(elem: HTMLElement, ctx?: any, changeCallback?: (targetProperty?: string, newValue?: any) => void): void {
         // Construct the JSX properties
-        const element: React.ReactElement<IPropertyFieldNewsSelectorHostProps> = React.createElement(PropertyFieldNewsSelectorHost, {
+        const element: React.ReactElement<IPropertyFieldMultiZoneSelectorHostProps> = React.createElement(PropertyFieldMultiZoneNewsSelectorHost, {
             label: this.label,
             targetProperty: this.targetProperty,
             panelTitle: this.panelTitle,
             allowMultipleSelections: this.allowMultipleSelections,
+            numberOfZones: this.numberOfZones,
             value: this.propertyValue,
             excludeSystemGroup: this.excludeSystemGroup,
             limitByGroupNameOrID: this.limitByGroupNameOrID,
@@ -107,8 +110,7 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
             onGetErrorMessage: this.onGetErrorMessage,
             deferredValidationTime: this.deferredValidationTime,
             termService: this.termService,
-            spService: this.spService,
-            showHeader: true
+            spService: this.spService
         });
 
         // Calls the REACT content generator
@@ -119,9 +121,7 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
      * Disposes the current object
      */
     private dispose(elem: HTMLElement): void {
-
     }
-
 }
 
 /**
@@ -129,10 +129,10 @@ class PropertyFieldNewsSelectorBuilder implements IPropertyPaneField<IPropertyFi
  * @param targetProperty - Target property the SharePoint list picker is associated to.
  * @param properties - Strongly typed SPList Picker properties.
  */
-export function PropertyFieldNewsSelector(targetProperty: string, properties: IPropertyFieldNewsSelectorProps): IPropertyPaneField<IPropertyFieldNewsSelectorPropsInternal> {
+export function PropertyFieldMultiZoneNewsSelector(targetProperty: string, properties: IPropertyFieldMultiZoneSelectorProps): IPropertyPaneField<IPropertyFieldMultiZoneSelectorPropsInternal> {
     // Calls the PropertyFieldTermPicker builder object
     // This object will simulate a PropertyFieldCustom to manage his rendering process
-    return new PropertyFieldNewsSelectorBuilder(targetProperty, {
+    return new PropertyPaneMultiZoneNewsSelectorBuilder(targetProperty, {
         ...properties,
         targetProperty: targetProperty,
         onRender: null,
