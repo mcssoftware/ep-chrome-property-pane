@@ -19,6 +19,7 @@ export function getZoneDataType(value: number) {
 }
 
 export interface IContentData {
+    title: string;
     backgroundUrl: string;
     backgroundColor: string;
     targetUrl: string;
@@ -42,6 +43,7 @@ export interface IPropertyPaneMultiZoneSelectorData extends Array<IZoneData> { }
 */
 export const getContentDataDefaultValue = (): IContentData => {
     return {
+        title: "",
         backgroundColor: "#ffffff",
         backgroundUrl: "",
         targetUrl: "",

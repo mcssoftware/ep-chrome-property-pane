@@ -1,10 +1,12 @@
-import { IZoneData, 
-    ZoneDataType, 
-    IContentData, 
-    IVideoData, 
-    getContentDataDefaultValue, 
-    getArticleDataDefaultValue, 
-    getVideoDataDefaultValue } from "../IPropertyPaneMultiZoneSelector";
+import {
+    IZoneData,
+    ZoneDataType,
+    IContentData,
+    IVideoData,
+    getContentDataDefaultValue,
+    getArticleDataDefaultValue,
+    getVideoDataDefaultValue
+} from "../IPropertyPaneMultiZoneSelector";
 import { IPropertyFieldNewsSelectorData } from "../../newsSelector";
 
 export class ZoneDataHost {
@@ -18,10 +20,10 @@ export class ZoneDataHost {
         this.contentData = getContentDataDefaultValue();
         this.articleData = getArticleDataDefaultValue();
         this.videoData = getVideoDataDefaultValue();
-        this.setData(data);
+        this.setValues(data);
     }
 
-    public setData(data: IZoneData): void {
+    public setValues(data: IZoneData): void {
         if (typeof data !== "undefined") {
             if (typeof data.type !== "undefined") {
                 this.dataType = data.type;
@@ -87,5 +89,12 @@ export class ZoneDataHost {
                 }
             }
         }
+    }
+
+    public getZoneData(): IZoneData {
+        return {
+            type: this.dataType,
+            data: this.getData()
+        };
     }
 }

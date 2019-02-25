@@ -2,10 +2,12 @@ import * as React from "react";
 import { Async } from "office-ui-fabric-react/lib/Utilities";
 import { IPropertyFieldMultiZoneSelectorHostProps, IPropertyFieldMultiZoneSelectorHostState } from "./IPropertyFieldMultiZoneSelectorHost";
 import FieldErrorMessage from "../../errorMessage/FieldErrorMessage";
-import { IPropertyPaneMultiZoneSelectorData, 
-    getPropertyFieldMultiZoneNewsSelectorDefaultValue, 
-    ZoneDataType, 
-    IContentData } from "../IPropertyPaneMultiZoneSelector";
+import {
+    IPropertyPaneMultiZoneSelectorData,
+    ZoneDataType,
+    IContentData,
+    IVideoData
+} from "../IPropertyPaneMultiZoneSelector";
 import { initGlobalVars } from "../../../common/ep";
 import { IChoiceGroupOption, ChoiceGroup } from "office-ui-fabric-react/lib/ChoiceGroup";
 import styles from "./PropertyFieldMultiZoneSelectorHost.module.scss";
@@ -13,6 +15,7 @@ import Header from "../../header/header";
 import PropertyFieldNewsSelectorHost from "../../newsSelector/component/PropertyFieldNewsSelectorHost";
 import { Label } from "office-ui-fabric-react/lib/Label";
 import { ContentControl } from "./ContentControl";
+import { VideoContentControl } from "./VideoContentControl";
 import { ZoneDataHost } from "./ZoneDataHost";
 import { cloneDeep } from "@microsoft/sp-lodash-subset";
 
@@ -40,10 +43,9 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
         }
         this.zoneOptions = [];
         const activeValues: ZoneDataHost[] = [];
-        const tempValues = Array.isArray(this.props.value) && this.props.value.length > 0 ? this.props.value : getPropertyFieldMultiZoneNewsSelectorDefaultValue();
 
-        for (let index: number = 0; index < this.props.numberOfZones - 1; index++) {
-            const text: string = "Zome " + (index + 1).toString();
+        for (let index: number = 0; index < this.props.numberOfZones; index++) {
+            const text: string = "Zone " + (index + 1).toString();
             this.zoneOptions.push({
                 key: index.toString(),
                 imageSrc: images[index],
@@ -63,9 +65,6 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
         };
         this.async = new Async(this);
         this.delayedValidate = this.async.debounce(this.validate, this.props.deferredValidationTime);
-
-        this.onZoneOptionSelected = this.onZoneOptionSelected.bind(this);
-        this.onArticleTypeSelected = this.onArticleTypeSelected.bind(this);
     }
 
     /**
@@ -76,6 +75,7 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
     public render(): JSX.Element {
         const { selectedZoneData, errorMessage } = this.state;
         const label: string = this.props.label || "Zone News Selector";
+        const selectedZoneDataType = selectedZoneData.getType().toString();
         return (
             <div className={styles.propertyFieldMultiZoneNewsSelectorHost}>
                 <Header title={label} />
@@ -91,8 +91,8 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
                     <div>
                         <div className={styles.row}>
                             <div className={styles.column}>
-                                <ChoiceGroup label="Select zone"
-                                    selectedKey={selectedZoneData.getType()}
+                                <ChoiceGroup label="Select zone data type"
+                                    selectedKey={selectedZoneDataType}
                                     options={[
                                         {
                                             key: ZoneDataType.Content.toString(),
@@ -136,13 +136,17 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
                                     targetProperty={this.props.targetProperty}
                                     label={this.props.label}
                                     onChange={null}
-                                    onPropertyChange={null}
+                                    onPropertyChange={this.onArticleDataChanged}
                                     key={this.props.key}
                                 />}
                                 {selectedZoneData.getType() === ZoneDataType.Content &&
-                                    <ContentControl data={selectedZoneData.getData() as IContentData} />
+                                    <ContentControl data={selectedZoneData.getData() as IContentData}
+                                        notify={this.onContentDataChanged} />
                                 }
-                                {selectedZoneData.getType() === ZoneDataType.Article && <div></div>}
+                                {selectedZoneData.getType() === ZoneDataType.Video &&
+                                    <VideoContentControl data={selectedZoneData.getData() as IVideoData}
+                                        notify={this.onVideoDataChanged} />
+                                }
                             </div>
                         </div>
                     </div>}
@@ -157,20 +161,22 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
     }
 
     /**
-     * Validates the new custom field value
+   * Called when the component will unmount
+   */
+    public componentWillUnmount() {
+        if (typeof this.async !== "undefined") {
+            this.async.dispose();
+        }
+    }
+
+    /**
+     * Zone changed
      * @private
-     * @param {IPropertyPaneMultiZoneSelectorData} value
+     * @param {React.SyntheticEvent<HTMLElement>} ev
+     * @param {IChoiceGroupOption} option
      * @memberof PropertyFieldMultiZoneNewsSelectorHost
-    */
-    private validate(value: ZoneDataHost[]): void {
-        const internalResult: string = this.validateInternal(value);
-    }
-
-    private validateInternal(value: ZoneDataHost[]): string {
-        return "";
-    }
-
-    private onZoneOptionSelected(ev: React.SyntheticEvent<HTMLElement>, option: IChoiceGroupOption): void {
+     */
+    private onZoneOptionSelected = (ev: React.SyntheticEvent<HTMLElement>, option: IChoiceGroupOption): void => {
         const zoneSelected = parseInt(option.key);
         const selectedZoneData = cloneDeep(this.state.activeValues[zoneSelected]);
         this.setState({
@@ -179,7 +185,14 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
         });
     }
 
-    private onArticleTypeSelected(ev: React.SyntheticEvent<HTMLElement>, option: IChoiceGroupOption): void {
+    /**
+     * Article type changed
+     * @private
+     * @param {React.SyntheticEvent<HTMLElement>} ev
+     * @param {IChoiceGroupOption} option
+     * @memberof PropertyFieldMultiZoneNewsSelectorHost
+     */
+    private onArticleTypeSelected = (ev: React.SyntheticEvent<HTMLElement>, option: IChoiceGroupOption): void => {
         const selectedZoneData = cloneDeep(this.state.selectedZoneData);
         selectedZoneData.setZoneType(option.key);
         const activeValues = cloneDeep(this.state.activeValues);
@@ -188,5 +201,84 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
             selectedZoneData,
             activeValues,
         });
+    }
+
+    /**
+     * Callback from content control value on change
+     * @private
+     * @param {IContentData} oldValue
+     * @param {IContentData} newValue
+     * @memberof PropertyFieldMultiZoneNewsSelectorHost
+     */
+    private onContentDataChanged = (oldValue: IContentData, newValue: IContentData): void => {
+        const { zoneSelected, activeValues } = this.state;
+        const selectedValue = cloneDeep(this.state.selectedZoneData);
+        selectedValue.setValues({ type: ZoneDataType.Content, data: newValue });
+        activeValues[zoneSelected] = selectedValue;
+        this.setState({ activeValues, selectedZoneData: selectedValue });
+        this.validate(activeValues);
+    }
+
+    /**
+     * Callback from video control value on change
+     *
+     * @private
+     * @param {IVideoData} oldValue
+     * @param {IVideoData} newValue
+     * @memberof PropertyFieldMultiZoneNewsSelectorHost
+     */
+    private onVideoDataChanged = (oldValue: IVideoData, newValue: IVideoData): void => {
+        const { zoneSelected, activeValues } = this.state;
+        const selectedValue = cloneDeep(this.state.selectedZoneData);
+        selectedValue.setValues({ type: ZoneDataType.Video, data: newValue });
+        activeValues[zoneSelected] = selectedValue;
+        this.setState({ activeValues, selectedZoneData: selectedValue });
+        this.validate(activeValues);
+    }
+
+    /**
+     * Callback from article control value on change
+     *
+     * @private
+     * @param {string} targetProperty
+     * @param {IVideoData} oldValue
+     * @param {IVideoData} newValue
+     * @memberof PropertyFieldMultiZoneNewsSelectorHost
+     */
+    private onArticleDataChanged = (targetProperty: string, oldValue: IVideoData, newValue: IVideoData): void => {
+        const { zoneSelected, activeValues } = this.state;
+        const selectedValue = cloneDeep(this.state.selectedZoneData);
+        selectedValue.setValues({ type: ZoneDataType.Article, data: newValue });
+        activeValues[zoneSelected] = selectedValue;
+        this.setState({ activeValues, selectedZoneData: selectedValue });
+        this.validate(activeValues);
+    }
+
+    /**
+     * Validates the new custom field value
+     * @private
+     * @param {IPropertyPaneMultiZoneSelectorData} value
+     * @memberof PropertyFieldMultiZoneNewsSelectorHost
+    */
+    private validate = (value: ZoneDataHost[]): void => {
+        const internalResult: string = this.validateInternal(value);
+        if (internalResult.length === 0) {
+            this.notifyAfterValidate(value);
+        }
+    }
+
+    private validateInternal = (value: ZoneDataHost[]): string => {
+        return "";
+    }
+
+    private notifyAfterValidate = (newvalues: ZoneDataHost[]) => {
+        const newValue = newvalues.map(a => a.getZoneData());
+        if (this.props.onPropertyChange && newValue.length > 0) {
+            this.props.onPropertyChange(this.props.targetProperty, this.props.value, newValue);
+            // Trigger the apply button
+            if (typeof this.props.onChange !== "undefined" && this.props.onChange !== null) {
+                this.props.onChange(this.props.targetProperty, newValue);
+            }
+        }
     }
 }
