@@ -130,8 +130,8 @@ export class ContentControl extends React.Component<IContentControlProps, IConte
      * @returns {*}
      * @memberof ContentControl
      */
-    public static getDerivedStateFromProps(nextProps: IContentControlProps, prevState: IContentControlProps): any {
-        if (!isEqual(nextProps.data, prevState.data)) {
+    public static getDerivedStateFromProps(nextProps: IContentControlProps, prevState: IContentControlState): any {
+        if (!isEqual(nextProps.data, prevState.value)) {
             return {
                 value: nextProps.data,
                 useImage: typeof nextProps.data !== "undefined"

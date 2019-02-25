@@ -82,69 +82,76 @@ export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IProp
                   value: this.properties.multizoneNewsSelector,
                   numberOfZones: 6
                 })
-                // PropertyPaneTextField("innerContent", {
-                //   label: "Inner Content",
-                //   multiline: true,
-                //   rows: 6,
-                // }),
-                // PropertyFieldEpChrome("test", {
-                //   key: "test",
-                //   value: this.properties.test,
-                //   label: "Test Settings",
-                //   onPropertyChange: this.onPropertyChanged,
-                // })
               ]
             }
           ]
         },
-        // {
-        //   header: {
-        //     description: "News Settings"
-        //   },
-        //   groups: [
-        //     {
-        //       groupName: "Settings",
-        //       groupFields: [
-        //         PropertyFieldNewsSelector("newsSelector", {
-        //           key: "newsSelector",
-        //           context: this.context,
-        //           allowMultipleSelections: false,
-        //           disabled: false,
-        //           hideTermStoreName: true,
-        //           label: "News Selector",
-        //           onGetErrorMessage: this._validation,
-        //           panelTitle: "News Selector Panel",
-        //           limitByGroupNameOrID: "ElevatePoint",
-        //           limitByTermsetNameOrID: "News Channel",
-        //           onPropertyChange: this.onPropertyChanged
-        //         })
-        //       ]
-        //     }
-        //   ]
-        // },
-        // {
-        //   header: {
-        //     description: "News Settings"
-        //   },
-        //   groups: [
-        //     {
-        //       groupName: "Settings",
-        //       groupFields: [
-        //         PropertyFieldCalendar("calendarSelector", {
-        //           key: "calendarSelector",
-        //           context: this.context,
-        //           includeHiddenList: false,
-        //           label: "Calendar",
-        //           onGetErrorMessage: null,
-        //           listBaseTemplate: 106,
-        //           value: this.properties.calendarSelector,
-        //           onPropertyChange: this.onPropertyChanged,
-        //           listOrderBy: ListPickerOrderByType.Title
-        //         })
-        //       ]
-        //     }
-        //   ]
-        // }
+        {
+          header: {
+            description: "News Settings"
+          },
+          groups: [
+            {
+              groupName: "Settings",
+              groupFields: [
+                PropertyFieldEpChrome("test", {
+                  key: "test",
+                  value: this.properties.test,
+                  label: "Test Settings",
+                  onPropertyChange: this.onPropertyChanged,
+                })
+              ]
+            }
+          ]
+        },
+        {
+          header: {
+            description: "News Settings"
+          },
+          groups: [
+            {
+              groupName: "Settings",
+              groupFields: [
+                PropertyFieldNewsSelector("newsSelector", {
+                  key: "newsSelector",
+                  context: this.context,
+                  allowMultipleSelections: false,
+                  disabled: false,
+                  hideTermStoreName: true,
+                  label: "News Selector",
+                  onGetErrorMessage: this._validation,
+                  panelTitle: "News Selector Panel",
+                  limitByGroupNameOrID: "ElevatePoint",
+                  limitByTermsetNameOrID: "News Channel",
+                  onPropertyChange: this.onPropertyChanged
+                })
+              ]
+            }
+          ]
+        },
+        {
+          header: {
+            description: "News Settings"
+          },
+          groups: [
+            {
+              groupName: "Settings",
+              groupFields: [
+                PropertyFieldCalendar("calendarSelector", {
+                  key: "calendarSelector",
+                  context: this.context,
+                  includeHiddenList: false,
+                  label: "Calendar",
+                  onGetErrorMessage: null,
+                  listBaseTemplate: 106,
+                  value: this.properties.calendarSelector,
+                  onPropertyChange: this.onPropertyChanged,
+                  listOrderBy: ListPickerOrderByType.Title
+                })
+              ]
+            }
+          ]
+        }
       ]
     };
   }
