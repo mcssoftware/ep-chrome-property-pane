@@ -100,7 +100,7 @@ export class ZoneDataHost {
                 type = ZoneDataType.None;
             } else {
                 const value1 = JSON.stringify(data);
-                const value2 = JSON.stringify(getZoneDefaultValue(type));
+                const value2 = JSON.stringify(getZoneDefaultValue(type).data);
                 if (value1 == value2) {
                     type = ZoneDataType.None;
                 }
