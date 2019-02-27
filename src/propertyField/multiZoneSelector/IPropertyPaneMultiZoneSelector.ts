@@ -3,7 +3,8 @@ import { ISPTermStorePickerService } from "../../services/ISPTermStorePickerServ
 import { ISPService } from "../../services/ISPService";
 
 export enum ZoneDataType {
-    Article = 0,
+    None = 0,
+    Article,
     Video,
     Content
 }
@@ -77,7 +78,7 @@ export const getArticleDataDefaultValue = (): IPropertyFieldSelectorData => {
 */
 export const getZoneDefaultValue = (type?: ZoneDataType): IZoneData => {
     if (typeof type === "undefined") {
-        type = ZoneDataType.Content;
+        type = ZoneDataType.None;
     }
     let data: IContentData | IVideoData | IPropertyFieldSelectorData;
     switch (type) {

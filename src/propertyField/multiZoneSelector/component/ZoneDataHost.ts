@@ -5,7 +5,8 @@ import {
     IVideoData,
     getContentDataDefaultValue,
     getArticleDataDefaultValue,
-    getVideoDataDefaultValue
+    getVideoDataDefaultValue,
+    getZoneDefaultValue
 } from "../IPropertyPaneMultiZoneSelector";
 import { IPropertyFieldNewsSelectorData } from "../../newsSelector";
 
@@ -16,7 +17,7 @@ export class ZoneDataHost {
     private articleData: IPropertyFieldNewsSelectorData;
 
     constructor(data?: IZoneData) {
-        this.dataType = ZoneDataType.Content;
+        this.dataType = ZoneDataType.None;
         this.contentData = getContentDataDefaultValue();
         this.articleData = getArticleDataDefaultValue();
         this.videoData = getVideoDataDefaultValue();
@@ -92,9 +93,22 @@ export class ZoneDataHost {
     }
 
     public getZoneData(): IZoneData {
+        const data = this.getData();
+        let type = this.dataType;
+        if (type !== ZoneDataType.None) {
+            if (data === null || typeof data === "undefined") {
+                type = ZoneDataType.None;
+            } else {
+                const value1 = JSON.stringify(data);
+                const value2 = JSON.stringify(getZoneDefaultValue(type));
+                if (value1 == value2) {
+                    type = ZoneDataType.None;
+                }
+            }
+        }
         return {
-            type: this.dataType,
-            data: this.getData()
+            type,
+            data
         };
     }
 }
