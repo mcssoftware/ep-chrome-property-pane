@@ -78,7 +78,7 @@ export const getArticleDataDefaultValue = (): IPropertyFieldSelectorData => {
 */
 export const getZoneDefaultValue = (type?: ZoneDataType): IZoneData => {
     if (typeof type === "undefined") {
-        type = ZoneDataType.None;
+        type = ZoneDataType.Content;
     }
     let data: IContentData | IVideoData | IPropertyFieldSelectorData;
     switch (type) {

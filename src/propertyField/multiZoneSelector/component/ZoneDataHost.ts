@@ -17,7 +17,7 @@ export class ZoneDataHost {
     private articleData: IPropertyFieldNewsSelectorData;
 
     constructor(data?: IZoneData) {
-        this.dataType = ZoneDataType.None;
+        this.dataType = ZoneDataType.Content;
         this.contentData = getContentDataDefaultValue();
         this.articleData = getArticleDataDefaultValue();
         this.videoData = getVideoDataDefaultValue();
@@ -26,7 +26,7 @@ export class ZoneDataHost {
 
     public setValues(data: IZoneData): void {
         if (typeof data !== "undefined") {
-            if (typeof data.type !== "undefined") {
+            if (typeof data.type !== "undefined" && (data.type !== ZoneDataType.None)) {
                 this.dataType = data.type;
             }
             switch (this.dataType) {
