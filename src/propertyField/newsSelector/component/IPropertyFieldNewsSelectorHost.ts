@@ -7,6 +7,10 @@ import { IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dropdown";
  * PropertyFieldNewsSelectorHost properties interface
  */
 export interface IPropertyFieldNewsSelectorHostProps extends IPropertyFieldNewsSelectorPropsInternal {
+  /**
+   * Deprecated
+   * @deprecated
+   */
   showHeader: boolean;
   onChange: (targetProperty?: string, newValue?: any) => void;
 }

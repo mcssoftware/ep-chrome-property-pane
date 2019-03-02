@@ -12,6 +12,10 @@ export interface IVideoContentControlProps {
      * method of the web part object.
      */
     notify(oldValue: IVideoData, newValue: IVideoData): void;
+    /**
+     * Whether the property pane field is enabled or not.
+     */
+    disabled?: boolean;
 }
 
 export interface IVideoContentControlState {
@@ -34,12 +38,14 @@ export class VideoContentControl extends React.Component<IVideoContentControlPro
 
     public render(): JSX.Element {
         const { value } = this.state;
+        const forcedDisabled: boolean = this.props.disabled || false;
         return (
             <div className={styles.propertyFieldMultiZoneNewsSelectorHost}>
                 <div className={styles.row}>
                     <div className={styles.column}>
                         <TextField label="Video Url"
                             value={value.url}
+                            disabled={forcedDisabled}
                             onChanged={this.onVideoUrlChanged} />
                     </div>
                 </div>

@@ -16,6 +16,10 @@ export interface IContentControlProps {
      * method of the web part object.
      */
     notify(oldValue: IContentData, newValue: IContentData): void;
+    /**
+     * Whether the property pane field is enabled or not.
+     */
+    disabled?: boolean;
 }
 
 export interface IContentControlState {
@@ -57,12 +61,14 @@ export class ContentControl extends React.Component<IContentControlProps, IConte
      */
     public render(): JSX.Element {
         const { value, useImage } = this.state;
+        const forcedDisabled: boolean = this.props.disabled || false;
         return (
             <div className={styles.propertyFieldMultiZoneNewsSelectorHost}>
                 <div className={styles.row}>
                     <div className={styles.column}>
                         <TextField label="Title"
                             value={value.title}
+                            disabled={forcedDisabled}
                             onChanged={this.onTitleTextChanged} />
                     </div>
                 </div>
@@ -72,6 +78,7 @@ export class ContentControl extends React.Component<IContentControlProps, IConte
                             onText="Use Image as background"
                             offText="Use color as background"
                             onChanged={this.onBackgroundToggled}
+                            disabled={forcedDisabled}
                             checked={useImage} />
                     </div>
                     <div className={styles.column}>
@@ -80,6 +87,7 @@ export class ContentControl extends React.Component<IContentControlProps, IConte
                                 value={value.backgroundColor}
                                 readOnly={true}
                                 onClick={this.openBgColorPanel}
+                                disabled={forcedDisabled}
                                 iconProps={{ iconName: "Tag" }} />
                         }
                         {useImage && <TextField label="Image Url"
@@ -98,6 +106,7 @@ export class ContentControl extends React.Component<IContentControlProps, IConte
                     <div className={styles.column}>
                         <TextField label="Target Url"
                             value={value.targetUrl}
+                            disabled={forcedDisabled}
                             onChanged={this.ontargetUrlTextChanged} />
                     </div>
                 </div>
@@ -150,7 +159,9 @@ export class ContentControl extends React.Component<IContentControlProps, IConte
      * @memberof ContentControl
      */
     private openBgColorPanel = (): void => {
-        this.setState({ showPanel: true, bgColor: this.state.value.backgroundColor });
+        if (this.props.disabled !== true) {
+            this.setState({ showPanel: true, bgColor: this.state.value.backgroundColor });
+        }
     }
 
     /**

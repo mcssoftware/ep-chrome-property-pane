@@ -129,7 +129,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
   /**
    * Validates the new custom field value
    */
-  private validate(value: IPropertyFieldNewsSelectorData): void {
+  private validate = (value: IPropertyFieldNewsSelectorData): void => {
     const internalResult: string = this.validateInternal(value);
     if (internalResult.length < 1) {
       if (this.props.onGetErrorMessage === null || this.props.onGetErrorMessage === undefined) {
@@ -366,10 +366,10 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
    * @memberof PropertyFieldNewsSelectorHost
    */
   public render(): JSX.Element {
-    const label: string = this.props.label || "News Selector";
+    const forcedDisabled: boolean = this.props.disabled || false;
     return (
       <div>
-        {this.props.showHeader && <Header title={label} />}
+        <Header title={this.props.label} />
         <table className={styles.termFieldTable}>
           <tbody>
             <tr>
@@ -382,7 +382,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
                 <TermPicker
                   context={this.props.context}
                   newsSelectorHostProps={this.props}
-                  disabled={this.props.disabled}
+                  disabled={forcedDisabled}
                   value={this.state.activeValues.NewsChannel}
                   onChanged={this.termsFromPickerChanged}
                   allowMultipleSelections={this.props.allowMultipleSelections}
@@ -393,7 +393,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
                 />
               </td>
               <td className={styles.termFieldRow}>
-                <IconButton disabled={this.props.disabled} iconProps={{ iconName: "Tag" }} onClick={this.onOpenPanel} />
+                <IconButton disabled={forcedDisabled} iconProps={{ iconName: "Tag" }} onClick={this.onOpenPanel} />
               </td>
             </tr>
             <tr>
@@ -401,6 +401,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
                 <ChoiceGroup
                   selectedKey={this.state.activeValues.ActiveDisplayMode.toString()}
                   className={styles.displayModeChoice}
+                  disabled={forcedDisabled}
                   options={[
                     {
                       key: ActiveDisplayModeType.Latest.toString(),
@@ -419,7 +420,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
                               onRenderTitle={this.onRenderDropDownTitle}
                               options={this.state.pageDropDownOptions}
                               required={this.state.activeValues.ActiveDisplayMode === ActiveDisplayModeType.Specific}
-                              disabled={this.state.activeValues.ActiveDisplayMode === ActiveDisplayModeType.Latest}
+                              disabled={forcedDisabled || (this.state.activeValues.ActiveDisplayMode === ActiveDisplayModeType.Latest)}
                               onChanged={this.onArticleDropDownChanged}
                             />
                           </div>

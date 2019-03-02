@@ -16,6 +16,8 @@ import { get, update } from '@microsoft/sp-lodash-subset';
 import { IPropertyFieldCalendarData, PropertyFieldCalendar } from '../../propertyField/calendar';
 import { ListPickerOrderByType } from '../../services/ISPService';
 import { IPropertyPaneMultiZoneSelectorData, PropertyFieldMultiZoneNewsSelector } from '../../propertyField/multiZoneSelector';
+import { IPropertyPaneKeyEventsData, PropertyFieldKeyEvents } from '../../propertyField/keyEvents';
+import { PropertyFieldNewsStrip, IPropertyPaneNewsStripData } from "../../propertyField/newsStrip";
 
 export interface IPropertyPaneTestWebPartProps {
   description: string;
@@ -24,6 +26,8 @@ export interface IPropertyPaneTestWebPartProps {
   newsSelector: IPropertyFieldNewsSelectorData;
   calendarSelector: IPropertyFieldCalendarData;
   multizoneNewsSelector: IPropertyPaneMultiZoneSelectorData;
+  keyEvents: IPropertyPaneKeyEventsData;
+  newsStrip: IPropertyPaneNewsStripData;
 }
 
 export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IPropertyPaneTestWebPartProps> {
@@ -67,91 +71,105 @@ export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IProp
             {
               groupName: "Settings",
               groupFields: [
-                PropertyFieldMultiZoneNewsSelector("multizoneNewsSelector", {
-                  key: "multizoneNewsSelector",
-                  context: this.context,
-                  allowMultipleSelections: false,
-                  disabled: false,
-                  hideTermStoreName: true,
-                  label: "Zone News Selector",
-                  onGetErrorMessage: null, //this._validation,
-                  panelTitle: "News Selector Panel",
-                  limitByGroupNameOrID: "ElevatePoint",
-                  limitByTermsetNameOrID: "News Channel",
+                PropertyFieldNewsStrip("newsStrip", {
+                  key: "newsStrip",
+                  value: this.properties.newsStrip,
                   onPropertyChange: this.onPropertyChanged,
-                  value: this.properties.multizoneNewsSelector,
-                  numberOfZones: 6
                 })
+                // PropertyFieldKeyEvents("keyEvents", {
+                //   key: "keyEvents",
+                //   context: this.context,
+                //   includeHiddenList: false,
+                //   listBaseTemplate: 106,
+                //   listOrderBy: ListPickerOrderByType.Title,
+                //   value: this.properties.keyEvents,
+                //   onPropertyChange: this.onPropertyChanged
+                // })
+                // PropertyFieldMultiZoneNewsSelector("multizoneNewsSelector", {
+                //   key: "multizoneNewsSelector",
+                //   context: this.context,
+                //   allowMultipleSelections: false,
+                //   disabled: false,
+                //   hideTermStoreName: true,
+                //   label: "Zone News Selector",
+                //   onGetErrorMessage: null, //this._validation,
+                //   panelTitle: "News Selector Panel",
+                //   limitByGroupNameOrID: "ElevatePoint",
+                //   limitByTermsetNameOrID: "News Channel",
+                //   onPropertyChange: this.onPropertyChanged,
+                //   value: this.properties.multizoneNewsSelector,
+                //   numberOfZones: 6
+                // })
               ]
             }
           ]
         },
-        {
-          header: {
-            description: "News Settings"
-          },
-          groups: [
-            {
-              groupName: "Settings",
-              groupFields: [
-                PropertyFieldEpChrome("test", {
-                  key: "test",
-                  value: this.properties.test,
-                  label: "Test Settings",
-                  onPropertyChange: this.onPropertyChanged,
-                })
-              ]
-            }
-          ]
-        },
-        {
-          header: {
-            description: "News Settings"
-          },
-          groups: [
-            {
-              groupName: "Settings",
-              groupFields: [
-                PropertyFieldNewsSelector("newsSelector", {
-                  key: "newsSelector",
-                  context: this.context,
-                  allowMultipleSelections: false,
-                  disabled: false,
-                  hideTermStoreName: true,
-                  label: "News Selector",
-                  onGetErrorMessage: this._validation,
-                  panelTitle: "News Selector Panel",
-                  limitByGroupNameOrID: "ElevatePoint",
-                  limitByTermsetNameOrID: "News Channel",
-                  onPropertyChange: this.onPropertyChanged
-                })
-              ]
-            }
-          ]
-        },
-        {
-          header: {
-            description: "News Settings"
-          },
-          groups: [
-            {
-              groupName: "Settings",
-              groupFields: [
-                PropertyFieldCalendar("calendarSelector", {
-                  key: "calendarSelector",
-                  context: this.context,
-                  includeHiddenList: false,
-                  label: "Calendar",
-                  onGetErrorMessage: null,
-                  listBaseTemplate: 106,
-                  value: this.properties.calendarSelector,
-                  onPropertyChange: this.onPropertyChanged,
-                  listOrderBy: ListPickerOrderByType.Title
-                })
-              ]
-            }
-          ]
-        }
+        // {
+        //   header: {
+        //     description: "News Settings"
+        //   },
+        //   groups: [
+        //     {
+        //       groupName: "Settings",
+        //       groupFields: [
+        //         PropertyFieldEpChrome("test", {
+        //           key: "test",
+        //           value: this.properties.test,
+        //           label: "Test Settings",
+        //           onPropertyChange: this.onPropertyChanged,
+        //         })
+        //       ]
+        //     }
+        //   ]
+        // },
+        // {
+        //   header: {
+        //     description: "News Settings"
+        //   },
+        //   groups: [
+        //     {
+        //       groupName: "Settings",
+        //       groupFields: [
+        //         PropertyFieldNewsSelector("newsSelector", {
+        //           key: "newsSelector",
+        //           context: this.context,
+        //           allowMultipleSelections: false,
+        //           disabled: false,
+        //           hideTermStoreName: true,
+        //           label: "News Selector",
+        //           onGetErrorMessage: this._validation,
+        //           panelTitle: "News Selector Panel",
+        //           limitByGroupNameOrID: "ElevatePoint",
+        //           limitByTermsetNameOrID: "News Channel",
+        //           onPropertyChange: this.onPropertyChanged
+        //         })
+        //       ]
+        //     }
+        //   ]
+        // },
+        // {
+        //   header: {
+        //     description: "News Settings"
+        //   },
+        //   groups: [
+        //     {
+        //       groupName: "Settings",
+        //       groupFields: [
+        //         PropertyFieldCalendar("calendarSelector", {
+        //           key: "calendarSelector",
+        //           context: this.context,
+        //           includeHiddenList: false,
+        //           label: "Calendar",
+        //           onGetErrorMessage: null,
+        //           listBaseTemplate: 106,
+        //           value: this.properties.calendarSelector,
+        //           onPropertyChange: this.onPropertyChanged,
+        //           listOrderBy: ListPickerOrderByType.Title
+        //         })
+        //       ]
+        //     }
+        //   ]
+        // }
       ]
     };
   }

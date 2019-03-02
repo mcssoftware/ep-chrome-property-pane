@@ -17,7 +17,7 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
         this.state = {
             value: {
                 IconPath: tempValue.IconPath || defaultValues.IconPath,
-                ShowTitle: tempValue.ShowTitle || defaultValues.ShowTitle,
+                ShowTitle: typeof tempValue.ShowTitle === "undefined" ? defaultValues.ShowTitle : tempValue.ShowTitle,
                 Title: tempValue.Title || defaultValues.Title
             }
         };
@@ -88,11 +88,12 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
         return "";
     }
 
-   /**
-   * Validates the new custom field value
-   */
-    private validate(value: IPropertyFieldEpChromeData): void {
+    /**
+    * Validates the new custom field value
+    */
+    private validate = (value: IPropertyFieldEpChromeData): void => {
         if (this.props.onGetErrorMessage === null || this.props.onGetErrorMessage === undefined) {
+            this.setState({ errorMessage: "" });
             this.notifyAfterValidate(this.props.value, value);
             return;
         }
@@ -116,6 +117,7 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                 });
             }
         } else {
+            this.setState({ errorMessage: "" });
             this.notifyAfterValidate(this.props.value, value);
         }
     }

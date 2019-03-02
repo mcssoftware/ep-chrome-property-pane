@@ -74,16 +74,17 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
      */
     public render(): JSX.Element {
         const { selectedZoneData, errorMessage } = this.state;
-        const label: string = this.props.label || "Zone News Selector";
         const selectedZoneDataType = selectedZoneData.getType().toString();
+        const forcedDisabled: boolean = this.props.disabled || false;
         return (
             <div className={styles.propertyFieldMultiZoneNewsSelectorHost}>
-                <Header title={label} />
+                <Header title={this.props.label} />
                 <div className={styles.row}>
                     <div className={styles.column}>
                         <ChoiceGroup label="Select zone"
                             selectedKey={this.state.zoneSelected.toString()}
                             options={this.zoneOptions}
+                            disabled={forcedDisabled}
                             onChange={this.onZoneOptionSelected} />
                     </div>
                 </div>
@@ -93,6 +94,7 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
                             <div className={styles.column}>
                                 <ChoiceGroup label="Select zone data type"
                                     selectedKey={selectedZoneDataType}
+                                    disabled={forcedDisabled}
                                     options={[
                                         {
                                             key: ZoneDataType.Content.toString(),
@@ -141,10 +143,12 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
                                 />}
                                 {selectedZoneData.getType() === ZoneDataType.Content &&
                                     <ContentControl data={selectedZoneData.getData() as IContentData}
+                                        disabled={forcedDisabled}
                                         notify={this.onContentDataChanged} />
                                 }
                                 {selectedZoneData.getType() === ZoneDataType.Video &&
                                     <VideoContentControl data={selectedZoneData.getData() as IVideoData}
+                                        disabled={forcedDisabled}
                                         notify={this.onVideoDataChanged} />
                                 }
                             </div>

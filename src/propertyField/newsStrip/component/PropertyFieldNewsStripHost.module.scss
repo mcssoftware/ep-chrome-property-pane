@@ -1,0 +1,16 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.propertyPaneNewsStripHost {
+  .row {
+    @include ms-Grid-row;
+  }
+
+  .column {
+    @include ms-Grid-col;
+    @include ms-lg12;
+  }
+
+  .choiceSelector {
+    margin-top: 8px;
+  }
+}

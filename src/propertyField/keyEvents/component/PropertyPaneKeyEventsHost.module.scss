@@ -1,0 +1,27 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.propertyPaneKeyEventsHost {
+  .row {
+    @include ms-Grid-row;
+  }
+
+  .column {
+    @include ms-Grid-col;
+    @include ms-lg12;
+  }
+
+  .displayModeChoice {
+    :global .ms-ChoiceField-wrapper {
+      width: 100%;
+    }
+  }
+
+  .listSelectorDdl {
+    margin-top: 8px;
+    margin-left: 8px;
+  }
+
+  .choiceSelector {
+    margin-top: 8px;
+  }
+}

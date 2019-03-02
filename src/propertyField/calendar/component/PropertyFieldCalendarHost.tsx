@@ -1,15 +1,15 @@
 import * as React from "react";
 import { IPropertyPaneCalendarHostProps, IPropertyPaneCalendarHostState } from "./IPropertyFieldCalendarHost";
 import { IPropertyFieldCalendarData, getCalendarDataDefaultValues, CalendarDisplayModeType } from "../IPropertyFieldCalendar";
-import styles from "./IPropertyFieldCalendarHost.module.scss";
+import styles from "./PropertyFieldCalendarHost.module.scss";
 import Header from "./../../header/header";
 import FieldErrorMessage from "../../errorMessage/FieldErrorMessage";
 import { Async } from "office-ui-fabric-react/lib/Utilities";
-import { IDropdownOption, Dropdown } from "office-ui-fabric-react/lib-es2015/Dropdown";
+import { IDropdownOption, Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import { ISPService, ISPLists, ISPList } from "../../../services/ISPService";
 import { initGlobalVars } from "../../../common/ep";
-import { Spinner, SpinnerType } from "office-ui-fabric-react/lib-es2015/Spinner";
-import { ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react/lib-es2015/ChoiceGroup";
+import { Spinner, SpinnerType } from "office-ui-fabric-react/lib/Spinner";
+import { ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react/lib/ChoiceGroup";
 import { cloneDeep } from "@microsoft/sp-lodash-subset";
 
 export default class PropertyFieldCalendarHost extends React.Component<IPropertyPaneCalendarHostProps, IPropertyPaneCalendarHostState> {
@@ -52,6 +52,15 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
         // Start retrieving the SharePoint lists
         this.loadLists();
         this.loadListItems(this.state.value);
+    }
+
+    /**
+     * Called when the component will unmount
+     */
+    public componentWillUnmount() {
+        if (typeof this.async !== "undefined") {
+            this.async.dispose();
+        }
     }
 
     /**
@@ -120,16 +129,16 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
 
     public render(): JSX.Element {
         const { value, listLoaded } = this.state;
-        const label: string = this.props.label || "Ep Chrome Settings";
+        const forcedDisabled: boolean = this.props.disabled || false;
         return (
             <div className={styles.propertyPaneCalendarHost}>
-                <Header title={label} />
+                <Header title={this.props.label} />
                 {!listLoaded && <Spinner type={SpinnerType.normal} />}
                 {listLoaded && <div>
                     <div className={styles.row}>
                         <div className={styles.column}>
                             <Dropdown
-                                disabled={this.props.disabled}
+                                disabled={forcedDisabled}
                                 label="Select List"
                                 onChanged={this.onListSelectionDdlChanged}
                                 options={this.state.listOptions}
@@ -141,6 +150,7 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
                         <div className={styles.column}>
                             <ChoiceGroup
                                 selectedKey={value.CalendarDisplayMode.toString()}
+                                disabled={forcedDisabled}
                                 className={styles.displayModeChoice}
                                 options={[
                                     {
@@ -160,7 +170,7 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
                                                         onRenderTitle={this.onRenderDropDownTitle}
                                                         options={this.state.itemsDropDownOptions}
                                                         required={value.CalendarDisplayMode === CalendarDisplayModeType.Specific}
-                                                        disabled={value.CalendarDisplayMode === CalendarDisplayModeType.Latest}
+                                                        disabled={forcedDisabled || (value.CalendarDisplayMode === CalendarDisplayModeType.Latest)}
                                                         onChanged={this.onItemDropDownChanged}
                                                     />
                                                 </div>
@@ -252,10 +262,11 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
     /**
    * Validates the new custom field value
    */
-    private validate(value: IPropertyFieldCalendarData): void {
+    private validate = (value: IPropertyFieldCalendarData): void => {
         const internalResult: string = this.validateInternal(value);
         if (internalResult.length < 1) {
             if (this.props.onGetErrorMessage === null || this.props.onGetErrorMessage === undefined) {
+                this.setState({ errorMessage: "" });
                 this.notifyAfterValidate(this.props.value, value);
                 return;
             }
@@ -280,6 +291,7 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
                 });
             }
         } else {
+            this.setState({ errorMessage: "" });
             this.notifyAfterValidate(this.props.value, value);
         }
     }
