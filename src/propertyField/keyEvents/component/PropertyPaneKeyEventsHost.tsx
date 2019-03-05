@@ -15,7 +15,7 @@ import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { Async } from "office-ui-fabric-react/lib/Utilities";
 import { cloneDeep } from "@microsoft/sp-lodash-subset";
 
-const allListSelectedKey: string = "ALL";
+const allListSelectedKey: string = "All";
 const listSelectionKey: string = "selectedList";
 
 export default class PropertyFieldKeyEventsHost extends React.Component<IPropertyPaneKeyEventsHostProps, IPropertyPaneKeyEventsHostState> {
@@ -79,7 +79,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
                                     },
                                     {
                                         key: listSelectionKey,
-                                        text: "Select List(s)",
+                                        text: "Select Calendar(s)",
                                         onRenderField: (props, render) => {
                                             return (
                                                 <div>
@@ -99,7 +99,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
                                     }
                                 ]}
                                 onChange={this.onChoiceChanged}
-                                label="Calendar Display Mode"
+                                label="Select Calendar(s)"
                             />
                         </div>
                     </div>
