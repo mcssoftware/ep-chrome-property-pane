@@ -1,2 +1,2 @@
-export * from "./IPropertyPaneKeyEvents";
-export * from "./PropertyPaneKeyEvents";
+export * from "./IPropertyFieldKeyEvents";
+export * from "./PropertyFieldKeyEvents";

@@ -16,8 +16,8 @@ import { get, update } from '@microsoft/sp-lodash-subset';
 import { IPropertyFieldCalendarData, PropertyFieldCalendar } from '../../propertyField/calendar';
 import { ListPickerOrderByType } from '../../services/ISPService';
 import { IPropertyPaneMultiZoneSelectorData, PropertyFieldMultiZoneNewsSelector } from '../../propertyField/multiZoneSelector';
-import { IPropertyPaneKeyEventsData, PropertyFieldKeyEvents } from '../../propertyField/keyEvents';
-import { PropertyFieldNewsStrip, IPropertyPaneNewsStripData } from "../../propertyField/newsStrip";
+import { IPropertyFieldKeyEventsData, PropertyFieldKeyEvents } from '../../propertyField/keyEvents';
+import { PropertyFieldNewsStrip, IPropertyFieldNewsStripData } from "../../propertyField/newsStrip";
 
 export interface IPropertyPaneTestWebPartProps {
   description: string;
@@ -26,8 +26,8 @@ export interface IPropertyPaneTestWebPartProps {
   newsSelector: IPropertyFieldNewsSelectorData;
   calendarSelector: IPropertyFieldCalendarData;
   multizoneNewsSelector: IPropertyPaneMultiZoneSelectorData;
-  keyEvents: IPropertyPaneKeyEventsData;
-  newsStrip: IPropertyPaneNewsStripData;
+  keyEvents: IPropertyFieldKeyEventsData;
+  newsStrip: IPropertyFieldNewsStripData;
 }
 
 export default class PropertyPaneTestWebPart extends BaseClientSideWebPart<IPropertyPaneTestWebPartProps> {

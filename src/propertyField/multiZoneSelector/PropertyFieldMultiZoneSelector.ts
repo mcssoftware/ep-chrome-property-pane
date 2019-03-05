@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
-import { IPropertyFieldMultiZoneSelectorPropsInternal, IPropertyPaneMultiZoneSelectorData, getPropertyFieldMultiZoneNewsSelectorDefaultValue, IPropertyFieldMultiZoneSelectorProps } from "./IPropertyPaneMultiZoneSelector";
+import { IPropertyFieldMultiZoneSelectorPropsInternal, IPropertyPaneMultiZoneSelectorData, getPropertyFieldMultiZoneNewsSelectorDefaultValue, IPropertyFieldMultiZoneSelectorProps } from "./IPropertyFieldMultiZoneSelector";
 import { IPropertyPaneField, PropertyPaneFieldType, IWebPartContext } from "@microsoft/sp-webpart-base";
 import { ISPTermStorePickerService } from "../../services/ISPTermStorePickerService";
 import { ISPService } from "../../services/ISPService";

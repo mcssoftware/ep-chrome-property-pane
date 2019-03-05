@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { IPropertyPaneField, PropertyPaneFieldType } from '@microsoft/sp-webpart-base';
-import { IPropertyFieldKeyEventsPropsInternal, IPropertyFieldKeyEventsProps } from './IPropertyPaneKeyEvents';
+import { IPropertyFieldKeyEventsPropsInternal, IPropertyFieldKeyEventsProps } from './IPropertyFieldKeyEvents';
 import PropertyFieldKeyEventsHost from "./component/PropertyPaneKeyEventsHost";
 import SPService from '../../services/SPService';
 

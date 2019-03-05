@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IContentData, getContentDataDefaultValue } from "../IPropertyPaneMultiZoneSelector";
+import { IContentData, getContentDataDefaultValue } from "../IPropertyFieldMultiZoneSelector";
 import styles from "./PropertyFieldMultiZoneSelectorHost.module.scss";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { cloneDeep, isEqual } from "@microsoft/sp-lodash-subset";

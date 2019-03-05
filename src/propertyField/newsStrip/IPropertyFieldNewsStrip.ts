@@ -1,24 +1,22 @@
-import { IListPickerProps, ISPService } from "../../services/ISPService";
-
-export interface IPropertyPaneKeyEventsData {
+export interface IPropertyFieldNewsStripData {
     numberOfItemsToDisplay: number;
-    showCalendarIcon: boolean;
-    showMonthOnTop: boolean;
-    showCalendarCenterButton: boolean;
-    list: string[];
+    showAuthor: boolean;
+    showArticleDate: boolean;
+    showRating: boolean;
+    showSummary: boolean;
 }
 
-export const getKeyEventsDefaultValues = (): IPropertyPaneKeyEventsData => {
+export const getNewsStripDefaultValues = (): IPropertyFieldNewsStripData => {
     return {
-        list: [],
-        numberOfItemsToDisplay: 5,
-        showCalendarIcon: true,
-        showMonthOnTop: true,
-        showCalendarCenterButton: true,
+        numberOfItemsToDisplay: 4,
+        showAuthor: true,
+        showArticleDate: true,
+        showRating: true,
+        showSummary: true
     };
 };
 
-export interface IPropertyFieldKeyEventsProps extends IListPickerProps{
+export interface IPropertyFieldNewsStripProps {
     key: string;
     /**
      * Label for the Chrome field.
@@ -27,15 +25,11 @@ export interface IPropertyFieldKeyEventsProps extends IListPickerProps{
     /**
      * Value to be displayed in the chrome
      */
-    value?: IPropertyPaneKeyEventsData;
+    value?: IPropertyFieldNewsStripData;
     /**
      * Whether the property pane field is enabled or not.
      */
     disabled?: boolean;
-    /**
-    * WebPart's context
-    */
-    context: any;
     /**
      * The method is used to get the validation error message and determine whether the input value is valid or not.
      *
@@ -48,7 +42,7 @@ export interface IPropertyFieldKeyEventsProps extends IListPickerProps{
      *   - The rejected, the value is thrown away.
      *
      */
-    onGetErrorMessage?: (value: IPropertyPaneKeyEventsData) => string | Promise<string>;
+    onGetErrorMessage?: (value: IPropertyFieldNewsStripData) => string | Promise<string>;
     /**
      * Defines a onPropertyChange function to raise when the selected value changed.
      * Normally this function must be always defined with the 'this.onPropertyChange'
@@ -62,8 +56,7 @@ export interface IPropertyFieldKeyEventsProps extends IListPickerProps{
     deferredValidationTime?: number;
 }
 
-export interface IPropertyFieldKeyEventsPropsInternal extends IPropertyFieldKeyEventsProps{
-    spService: ISPService;
+export interface IPropertyFieldNewsStripPropsInternal extends IPropertyFieldNewsStripProps {
     targetProperty: string;
     onRender(elem: HTMLElement): void;
     onDispose(elem: HTMLElement): void;

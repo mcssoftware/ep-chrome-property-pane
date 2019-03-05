@@ -3,7 +3,7 @@ import { IPropertyPaneKeyEventsHostProps, IPropertyPaneKeyEventsHostState } from
 import { ISPService, ISPList, ISPLists } from "../../../services/ISPService";
 import { initGlobalVars } from "../../../common/ep";
 import { } from "../../../common/global";
-import { IPropertyPaneKeyEventsData, getKeyEventsDefaultValues } from "../IPropertyPaneKeyEvents";
+import { IPropertyFieldKeyEventsData, getKeyEventsDefaultValues } from "../IPropertyFieldKeyEvents";
 import styles from "./PropertyPaneKeyEventsHost.module.scss";
 import Header from "./../../header/header";
 import { Spinner, SpinnerType } from "office-ui-fabric-react/lib/Spinner";
@@ -22,7 +22,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
     private spService: ISPService;
     private allListValue: string[];
     private async: Async;
-    private delayedValidate: (value: IPropertyPaneKeyEventsData) => void;
+    private delayedValidate: (value: IPropertyFieldKeyEventsData) => void;
 
     constructor(props: IPropertyPaneKeyEventsHostProps) {
         super(props);
@@ -34,8 +34,8 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
         this.async = new Async(this);
         this.delayedValidate = this.async.debounce(this.validate, this.props.deferredValidationTime);
 
-        const tempValue: IPropertyPaneKeyEventsData = props.value || {} as IPropertyPaneKeyEventsData;
-        const defaultValues: IPropertyPaneKeyEventsData = getKeyEventsDefaultValues();
+        const tempValue: IPropertyFieldKeyEventsData = props.value || {} as IPropertyFieldKeyEventsData;
+        const defaultValues: IPropertyFieldKeyEventsData = getKeyEventsDefaultValues();
         this.state = {
             value: {
                 list: tempValue.list || defaultValues.list,
@@ -207,7 +207,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
      */
     private onChoiceChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, option?: IChoiceGroupOption): void => {
         if (typeof option !== "undefined") {
-            const value: IPropertyPaneKeyEventsData = cloneDeep(this.state.value);
+            const value: IPropertyFieldKeyEventsData = cloneDeep(this.state.value);
             if (option.key === allListSelectedKey) {
                 value.list = [...this.allListValue];
             } else {
@@ -228,7 +228,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
      */
     private onListDropDownChanged = (option: IDropdownOption, index?: number): void => {
         let { selectedLists } = this.state;
-        const value: IPropertyPaneKeyEventsData = cloneDeep(this.state.value);
+        const value: IPropertyFieldKeyEventsData = cloneDeep(this.state.value);
         const key: string = option.key as string;
         if (option.selected) {
             selectedLists.push(key);
@@ -251,7 +251,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
         if (this.validateNumber(newValue).length > 0) {
             this.setState({ numberOfItemsText: newValue });
         } else {
-            const value: IPropertyPaneKeyEventsData = cloneDeep(this.state.value);
+            const value: IPropertyFieldKeyEventsData = cloneDeep(this.state.value);
             value.numberOfItemsToDisplay = parseInt(newValue);
             this.setState({ value, numberOfItemsText: newValue });
             this.delayedValidate(value);
@@ -267,7 +267,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
      * @memberof PropertyFieldCalendarHost
      */
     private onShowCalendarChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
-        const value: IPropertyPaneKeyEventsData = cloneDeep(this.state.value);
+        const value: IPropertyFieldKeyEventsData = cloneDeep(this.state.value);
         value.showCalendarIcon = checked;
         this.setState({ value });
         this.delayedValidate(value);
@@ -282,7 +282,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
      * @memberof PropertyFieldCalendarHost
      */
     private onCalendarMonthOnTopChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
-        const value: IPropertyPaneKeyEventsData = cloneDeep(this.state.value);
+        const value: IPropertyFieldKeyEventsData = cloneDeep(this.state.value);
         value.showMonthOnTop = checked;
         this.setState({ value });
         this.delayedValidate(value);
@@ -297,7 +297,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
      * @memberof PropertyFieldCalendarHost
      */
     private onShowCalendarButtonChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
-        const value: IPropertyPaneKeyEventsData = cloneDeep(this.state.value);
+        const value: IPropertyFieldKeyEventsData = cloneDeep(this.state.value);
         value.showCalendarCenterButton = checked;
         this.setState({ value });
         this.delayedValidate(value);
@@ -306,7 +306,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
     /**
      * Validates the new custom field value
      */
-    private validate = (value: IPropertyPaneKeyEventsData): void => {
+    private validate = (value: IPropertyFieldKeyEventsData): void => {
         const internalResult: string = this.validateInternal(value);
         if (internalResult.length < 1) {
             if (this.props.onGetErrorMessage === null || this.props.onGetErrorMessage === undefined) {
@@ -340,7 +340,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
         }
     }
 
-    private validateInternal = (value: IPropertyPaneKeyEventsData): string => {
+    private validateInternal = (value: IPropertyFieldKeyEventsData): string => {
         if (value.list.length < 1) {
             return "Please select at least one calendar list.";
         }
@@ -361,7 +361,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
     /**
     * Notifies the parent Web Part of a property value change
     */
-    private notifyAfterValidate = (oldValue: IPropertyPaneKeyEventsData, newValue: IPropertyPaneKeyEventsData) => {
+    private notifyAfterValidate = (oldValue: IPropertyFieldKeyEventsData, newValue: IPropertyFieldKeyEventsData) => {
         if (this.props.onPropertyChange && newValue !== null) {
             // this.props.properties[this.props.targetProperty] = newValue;
             this.props.onPropertyChange(this.props.targetProperty, oldValue, newValue);

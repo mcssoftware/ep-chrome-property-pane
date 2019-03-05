@@ -1,22 +1,24 @@
-export interface IPropertyPaneNewsStripData {
+import { IListPickerProps, ISPService } from "../../services/ISPService";
+
+export interface IPropertyFieldKeyEventsData {
     numberOfItemsToDisplay: number;
-    showAuthor: boolean;
-    showArticleDate: boolean;
-    showRating: boolean;
-    showSummary: boolean;
+    showCalendarIcon: boolean;
+    showMonthOnTop: boolean;
+    showCalendarCenterButton: boolean;
+    list: string[];
 }
 
-export const getNewsStripDefaultValues = (): IPropertyPaneNewsStripData => {
+export const getKeyEventsDefaultValues = (): IPropertyFieldKeyEventsData => {
     return {
-        numberOfItemsToDisplay: 4,
-        showAuthor: true,
-        showArticleDate: true,
-        showRating: true,
-        showSummary: true
+        list: [],
+        numberOfItemsToDisplay: 5,
+        showCalendarIcon: true,
+        showMonthOnTop: true,
+        showCalendarCenterButton: true,
     };
 };
 
-export interface IPropertyFieldNewsStripProps {
+export interface IPropertyFieldKeyEventsProps extends IListPickerProps{
     key: string;
     /**
      * Label for the Chrome field.
@@ -25,11 +27,15 @@ export interface IPropertyFieldNewsStripProps {
     /**
      * Value to be displayed in the chrome
      */
-    value?: IPropertyPaneNewsStripData;
+    value?: IPropertyFieldKeyEventsData;
     /**
      * Whether the property pane field is enabled or not.
      */
     disabled?: boolean;
+    /**
+    * WebPart's context
+    */
+    context: any;
     /**
      * The method is used to get the validation error message and determine whether the input value is valid or not.
      *
@@ -42,7 +48,7 @@ export interface IPropertyFieldNewsStripProps {
      *   - The rejected, the value is thrown away.
      *
      */
-    onGetErrorMessage?: (value: IPropertyPaneNewsStripData) => string | Promise<string>;
+    onGetErrorMessage?: (value: IPropertyFieldKeyEventsData) => string | Promise<string>;
     /**
      * Defines a onPropertyChange function to raise when the selected value changed.
      * Normally this function must be always defined with the 'this.onPropertyChange'
@@ -56,7 +62,8 @@ export interface IPropertyFieldNewsStripProps {
     deferredValidationTime?: number;
 }
 
-export interface IPropertyFieldNewsStripPropsInternal extends IPropertyFieldNewsStripProps {
+export interface IPropertyFieldKeyEventsPropsInternal extends IPropertyFieldKeyEventsProps{
+    spService: ISPService;
     targetProperty: string;
     onRender(elem: HTMLElement): void;
     onDispose(elem: HTMLElement): void;

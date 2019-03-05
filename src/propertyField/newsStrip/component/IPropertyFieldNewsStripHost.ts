@@ -1,4 +1,4 @@
-import { IPropertyFieldNewsStripPropsInternal, IPropertyPaneNewsStripData } from "../IPropertyPaneNewsStrip";
+import { IPropertyFieldNewsStripPropsInternal, IPropertyFieldNewsStripData } from "../IPropertyFieldNewsStrip";
 
 /**
  * News strip component Props
@@ -12,11 +12,11 @@ export interface IPropertyFieldNewsStripHostProps extends IPropertyFieldNewsStri
     /**
     * Callback for the onChanged event.
     */
-    onChange: (targetProperty?: string, newValue?: IPropertyPaneNewsStripData) => void;
+    onChange: (targetProperty?: string, newValue?: IPropertyFieldNewsStripData) => void;
 }
 
 export interface IPropertyFieldNewsStripHostHost{
-    value: IPropertyPaneNewsStripData;
+    value: IPropertyFieldNewsStripData;
     numberOfItemsText: string;
     errorMessage?: string;
 }

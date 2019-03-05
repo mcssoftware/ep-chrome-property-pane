@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IVideoData, getVideoDataDefaultValue } from "../IPropertyPaneMultiZoneSelector";
+import { IVideoData, getVideoDataDefaultValue } from "../IPropertyFieldMultiZoneSelector";
 import { cloneDeep } from "@microsoft/sp-lodash-subset";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import styles from "./PropertyFieldMultiZoneSelectorHost.module.scss";

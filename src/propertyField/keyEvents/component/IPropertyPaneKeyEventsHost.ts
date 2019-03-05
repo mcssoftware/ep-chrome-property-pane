@@ -1,4 +1,4 @@
-import { IPropertyFieldKeyEventsPropsInternal, IPropertyPaneKeyEventsData } from "../IPropertyPaneKeyEvents";
+import { IPropertyFieldKeyEventsPropsInternal, IPropertyFieldKeyEventsData } from "../IPropertyFieldKeyEvents";
 import { IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dropdown";
 
 export interface IPropertyPaneKeyEventsHostProps extends IPropertyFieldKeyEventsPropsInternal {
@@ -6,11 +6,11 @@ export interface IPropertyPaneKeyEventsHostProps extends IPropertyFieldKeyEvents
     /**
     * Callback for the onChanged event.
     */
-    onChange: (targetProperty?: string, newValue?: IPropertyPaneKeyEventsData) => void;
+    onChange: (targetProperty?: string, newValue?: IPropertyFieldKeyEventsData) => void;
 }
 
 export interface IPropertyPaneKeyEventsHostState {
-    value: IPropertyPaneKeyEventsData;
+    value: IPropertyFieldKeyEventsData;
     listOptions: IDropdownOption[];
     listLoaded: boolean;
     listChoiceKey: string;

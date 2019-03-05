@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { IPropertyFieldNewsStripProps, IPropertyFieldNewsStripPropsInternal } from './IPropertyPaneNewsStrip';
+import { IPropertyFieldNewsStripProps, IPropertyFieldNewsStripPropsInternal } from './IPropertyFieldNewsStrip';
 import { PropertyPaneFieldType, IPropertyPaneField } from '@microsoft/sp-webpart-base';
 import PropertyFieldNewsStripHost from "./component/PropertyFieldNewsStripHost";
 

@@ -1,2 +1,2 @@
-export * from "./IPropertyPaneMultiZoneSelector";
-export * from "./PropertyPaneMultiZoneSelector";
+export * from "./IPropertyFieldMultiZoneSelector";
+export * from "./PropertyFieldMultiZoneSelector";

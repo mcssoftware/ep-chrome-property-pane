@@ -1,6 +1,6 @@
 import * as React from "react";
 import { IPropertyFieldNewsStripHostProps, IPropertyFieldNewsStripHostHost } from "./IPropertyFieldNewsStripHost";
-import { IPropertyPaneNewsStripData, getNewsStripDefaultValues } from "../IPropertyPaneNewsStrip";
+import { IPropertyFieldNewsStripData, getNewsStripDefaultValues } from "../IPropertyFieldNewsStrip";
 import { Async } from "office-ui-fabric-react/lib/Utilities";
 import styles from "./PropertyFieldNewsStripHost.module.scss";
 import Header from "../../header/header";
@@ -10,15 +10,15 @@ import { Checkbox } from "office-ui-fabric-react/lib/Checkbox";
 
 export default class PropertyFieldNewsStripHost extends React.Component<IPropertyFieldNewsStripHostProps, IPropertyFieldNewsStripHostHost>{
     private async: Async;
-    private delayedValidate: (value: IPropertyPaneNewsStripData) => void;
+    private delayedValidate: (value: IPropertyFieldNewsStripData) => void;
 
     constructor(props: IPropertyFieldNewsStripHostProps) {
         super(props);
         this.async = new Async(this);
         this.delayedValidate = this.async.debounce(this.validate, this.props.deferredValidationTime);
-        const tempValue: IPropertyPaneNewsStripData = props.value || {} as IPropertyPaneNewsStripData;
+        const tempValue: IPropertyFieldNewsStripData = props.value || {} as IPropertyFieldNewsStripData;
         const defaultValues = getNewsStripDefaultValues();
-        const value: IPropertyPaneNewsStripData = {
+        const value: IPropertyFieldNewsStripData = {
             numberOfItemsToDisplay: tempValue.numberOfItemsToDisplay || defaultValues.numberOfItemsToDisplay,
             showAuthor: typeof tempValue.showAuthor === "undefined" ? defaultValues.showAuthor : tempValue.showAuthor,
             showArticleDate: typeof tempValue.showArticleDate === "undefined" ? defaultValues.showArticleDate : tempValue.showArticleDate,
@@ -95,7 +95,7 @@ export default class PropertyFieldNewsStripHost extends React.Component<IPropert
         if (this.validateNumber(newValue).length > 0) {
             this.setState({ numberOfItemsText: newValue });
         } else {
-            const value: IPropertyPaneNewsStripData = cloneDeep(this.state.value);
+            const value: IPropertyFieldNewsStripData = cloneDeep(this.state.value);
             value.numberOfItemsToDisplay = parseInt(newValue);
             this.setState({ value, numberOfItemsText: newValue });
             this.delayedValidate(value);
@@ -111,7 +111,7 @@ export default class PropertyFieldNewsStripHost extends React.Component<IPropert
      * @memberof PropertyFieldNewsStripHost
      */
     private onShowArticleDateChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
-        const value: IPropertyPaneNewsStripData = cloneDeep(this.state.value);
+        const value: IPropertyFieldNewsStripData = cloneDeep(this.state.value);
         value.showArticleDate = checked;
         this.setState({ value });
         this.delayedValidate(value);
@@ -126,7 +126,7 @@ export default class PropertyFieldNewsStripHost extends React.Component<IPropert
      * @memberof PropertyFieldNewsStripHost
      */
     private onShowAuthorChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
-        const value: IPropertyPaneNewsStripData = cloneDeep(this.state.value);
+        const value: IPropertyFieldNewsStripData = cloneDeep(this.state.value);
         value.showAuthor = checked;
         this.setState({ value });
         this.delayedValidate(value);
@@ -141,7 +141,7 @@ export default class PropertyFieldNewsStripHost extends React.Component<IPropert
      * @memberof PropertyFieldNewsStripHost
      */
     private onShowRatingChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
-        const value: IPropertyPaneNewsStripData = cloneDeep(this.state.value);
+        const value: IPropertyFieldNewsStripData = cloneDeep(this.state.value);
         value.showRating = checked;
         this.setState({ value });
         this.delayedValidate(value);
@@ -156,7 +156,7 @@ export default class PropertyFieldNewsStripHost extends React.Component<IPropert
      * @memberof PropertyFieldNewsStripHost
      */
     private onShowSummaryChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
-        const value: IPropertyPaneNewsStripData = cloneDeep(this.state.value);
+        const value: IPropertyFieldNewsStripData = cloneDeep(this.state.value);
         value.showSummary = checked;
         this.setState({ value });
         this.delayedValidate(value);
@@ -166,11 +166,11 @@ export default class PropertyFieldNewsStripHost extends React.Component<IPropert
      * Validates the new custom field value
      *
      * @private
-     * @param {IPropertyPaneNewsStripData} value
+     * @param {IPropertyFieldNewsStripData} value
      * @returns {void}
      * @memberof PropertyFieldNewsStripHost
      */
-    private validate = (value: IPropertyPaneNewsStripData): void => {
+    private validate = (value: IPropertyFieldNewsStripData): void => {
         const internalResult: string = this.validateInternal(value);
         if (internalResult.length < 1) {
             if (this.props.onGetErrorMessage === null || this.props.onGetErrorMessage === undefined) {
@@ -204,7 +204,7 @@ export default class PropertyFieldNewsStripHost extends React.Component<IPropert
         }
     }
 
-    private validateInternal(value: IPropertyPaneNewsStripData): string {
+    private validateInternal(value: IPropertyFieldNewsStripData): string {
         return "";
     }
 
@@ -220,11 +220,11 @@ export default class PropertyFieldNewsStripHost extends React.Component<IPropert
      * Notifies the parent Web Part of a property value change
      *
      * @private
-     * @param {IPropertyPaneNewsStripData} oldValue
-     * @param {IPropertyPaneNewsStripData} newValue
+     * @param {IPropertyFieldNewsStripData} oldValue
+     * @param {IPropertyFieldNewsStripData} newValue
      * @memberof PropertyFieldNewsStripHost
      */
-    private notifyAfterValidate(oldValue: IPropertyPaneNewsStripData, newValue: IPropertyPaneNewsStripData) {
+    private notifyAfterValidate(oldValue: IPropertyFieldNewsStripData, newValue: IPropertyFieldNewsStripData) {
         if (this.props.onPropertyChange && newValue !== null) {
             // this.props.properties[this.props.targetProperty] = newValue;
             this.props.onPropertyChange(this.props.targetProperty, oldValue, newValue);

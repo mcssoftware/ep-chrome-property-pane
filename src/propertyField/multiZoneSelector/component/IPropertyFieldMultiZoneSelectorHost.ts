@@ -2,7 +2,7 @@ import * as React from "react";
 import {
     IPropertyFieldMultiZoneSelectorPropsInternal as IPropertyFieldMultiZoneSelectorPropsInternal,
     IPropertyPaneMultiZoneSelectorData,
-} from "../IPropertyPaneMultiZoneSelector";
+} from "../IPropertyFieldMultiZoneSelector";
 import { ZoneDataHost } from "./ZoneDataHost";
 
 /**

@@ -7,7 +7,7 @@ import {
     ZoneDataType,
     IContentData,
     IVideoData
-} from "../IPropertyPaneMultiZoneSelector";
+} from "../IPropertyFieldMultiZoneSelector";
 import { initGlobalVars } from "../../../common/ep";
 import { IChoiceGroupOption, ChoiceGroup } from "office-ui-fabric-react/lib/ChoiceGroup";
 import styles from "./PropertyFieldMultiZoneSelectorHost.module.scss";

@@ -7,7 +7,7 @@ import {
     getArticleDataDefaultValue,
     getVideoDataDefaultValue,
     getZoneDefaultValue
-} from "../IPropertyPaneMultiZoneSelector";
+} from "../IPropertyFieldMultiZoneSelector";
 import { IPropertyFieldNewsSelectorData } from "../../newsSelector";
 
 export class ZoneDataHost {
