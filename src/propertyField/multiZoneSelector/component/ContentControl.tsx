@@ -83,7 +83,7 @@ export class ContentControl extends React.Component<IContentControlProps, IConte
                     </div>
                     <div className={styles.column}>
                         {!useImage &&
-                            <TextField label="TextField with an icon"
+                            <TextField label="Background Color"
                                 value={value.backgroundColor}
                                 readOnly={true}
                                 onClick={this.openBgColorPanel}
@@ -165,7 +165,7 @@ export class ContentControl extends React.Component<IContentControlProps, IConte
     }
 
     /**
-     *
+     * Adding buttons on footer of panel
      *
      * @private
      * @returns {JSX.Element}

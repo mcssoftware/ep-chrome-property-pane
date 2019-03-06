@@ -4,6 +4,7 @@ export interface IPropertyFieldEpChromeData {
     Title?: string;
     ShowTitle: boolean;
     IconPath: string;
+    BackgroundColor: string;
 }
 
 export const getEpChromeDataDefaultValues = (): IPropertyFieldEpChromeData => {
@@ -11,6 +12,7 @@ export const getEpChromeDataDefaultValues = (): IPropertyFieldEpChromeData => {
         IconPath: "",
         ShowTitle: false,
         Title: "",
+        BackgroundColor: "#ffffff"
     };
 };
 

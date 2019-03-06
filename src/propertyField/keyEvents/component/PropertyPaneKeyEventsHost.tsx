@@ -43,6 +43,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
                 showCalendarCenterButton: typeof tempValue.showCalendarCenterButton === "undefined" ? defaultValues.showCalendarCenterButton : tempValue.showCalendarCenterButton,
                 showCalendarIcon: typeof tempValue.showCalendarIcon === "undefined" ? defaultValues.showCalendarIcon : tempValue.showCalendarIcon,
                 showMonthOnTop: typeof tempValue.showMonthOnTop === "undefined" ? defaultValues.showMonthOnTop : tempValue.showMonthOnTop,
+                displayStandardEvents: typeof tempValue.displayStandardEvents === "undefined" ? defaultValues.displayStandardEvents : tempValue.displayStandardEvents,
             },
             listOptions: [],
             listLoaded: false,
@@ -129,6 +130,11 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
                                 checked={value.showCalendarCenterButton}
                                 disabled={forcedDisabled}
                                 onChange={this.onShowCalendarButtonChanged} />
+                            <Checkbox label="Display Standard Events"
+                                className={styles.choiceSelector}
+                                checked={value.displayStandardEvents}
+                                disabled={forcedDisabled}
+                                onChange={this.onDisplayStandardEventsChanged} />
                         </div>
                     </div>
                 </div>}
@@ -289,7 +295,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
     }
 
     /**
-     * Trigger when show calendar button checkbox is clicked
+     * Trigger when show calendar checkbox is clicked
      *
      * @private
      * @param {(React.FormEvent<HTMLElement | HTMLInputElement>)} [ev]
@@ -299,6 +305,21 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
     private onShowCalendarButtonChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
         const value: IPropertyFieldKeyEventsData = cloneDeep(this.state.value);
         value.showCalendarCenterButton = checked;
+        this.setState({ value });
+        this.delayedValidate(value);
+    }
+
+    /**
+     * Trigger when display standard events checkbox is clicked
+     *
+     * @private
+     * @param {(React.FormEvent<HTMLElement | HTMLInputElement>)} [ev]
+     * @param {boolean} [checked]
+     * @memberof PropertyFieldCalendarHost
+     */
+    private onDisplayStandardEventsChanged = (ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean): void => {
+        const value: IPropertyFieldKeyEventsData = cloneDeep(this.state.value);
+        value.displayStandardEvents = checked;
         this.setState({ value });
         this.delayedValidate(value);
     }

@@ -11,4 +11,6 @@ export interface IPropertyPaneEpChromeHostProps extends IPropertyFieldEpChromePr
 export interface IPropertyPaneEpChromeHostState {
     value: IPropertyFieldEpChromeData;
     errorMessage?: string;
+    showColorPanel: boolean;
+    bgColor: string;
 }

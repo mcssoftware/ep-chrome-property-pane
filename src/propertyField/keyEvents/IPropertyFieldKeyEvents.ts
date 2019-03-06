@@ -5,6 +5,7 @@ export interface IPropertyFieldKeyEventsData {
     showCalendarIcon: boolean;
     showMonthOnTop: boolean;
     showCalendarCenterButton: boolean;
+    displayStandardEvents: boolean;
     list: string[];
 }
 
@@ -15,6 +16,7 @@ export const getKeyEventsDefaultValues = (): IPropertyFieldKeyEventsData => {
         showCalendarIcon: true,
         showMonthOnTop: true,
         showCalendarCenterButton: true,
+        displayStandardEvents: false,
     };
 };
 

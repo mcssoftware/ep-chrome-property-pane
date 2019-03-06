@@ -3,9 +3,12 @@ import { IPropertyFieldEpChromeData, getEpChromeDataDefaultValues } from "../IPr
 import { IPropertyPaneEpChromeHostProps, IPropertyPaneEpChromeHostState } from "./IPropertyPaneEpChromeHost";
 import styles from "./PropertyPaneEpChromeHost.module.scss";
 import { Toggle } from "office-ui-fabric-react/lib/Toggle";
-import { TextField } from "office-ui-fabric-react";
+import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { cloneDeep } from "@microsoft/sp-lodash-subset";
 import Header from '../../header/header';
+import { PanelType, Panel } from "office-ui-fabric-react/lib/Panel";
+import { ColorPicker } from "office-ui-fabric-react/lib/ColorPicker";
+import { PrimaryButton, DefaultButton } from "office-ui-fabric-react/lib/components/Button";
 
 export default class PropertPaneEpChromeHost extends React.Component<IPropertyPaneEpChromeHostProps, IPropertyPaneEpChromeHostState> {
 
@@ -18,8 +21,12 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
             value: {
                 IconPath: tempValue.IconPath || defaultValues.IconPath,
                 ShowTitle: typeof tempValue.ShowTitle === "undefined" ? defaultValues.ShowTitle : tempValue.ShowTitle,
-                Title: tempValue.Title || defaultValues.Title
-            }
+                Title: tempValue.Title || defaultValues.Title,
+                BackgroundColor: tempValue.BackgroundColor || defaultValues.BackgroundColor,
+            },
+            showColorPanel: false,
+            errorMessage: "",
+            bgColor: tempValue.BackgroundColor || defaultValues.BackgroundColor,
         };
     }
 
@@ -55,6 +62,32 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                         />
                     </div>
                 </div>
+                <div className={styles.row}>
+                    <div className={styles.column}>
+                        <TextField label="Background Color"
+                            value={value.BackgroundColor}
+                            readOnly={true}
+                            onClick={this.openBgColorPanel}
+                            iconProps={{ iconName: "Tag" }} />
+                    </div>
+                </div>
+                <Panel
+                    isOpen={this.state.showColorPanel}
+                    type={PanelType.smallFixedFar}
+                    onDismiss={this.onColorPickerPanelClose}
+                    headerText="Color Picker"
+                    closeButtonAriaLabel="Close"
+                    onRenderFooterContent={this.onPanelRenderFooterContent}>
+                    <div>
+                        <ColorPicker color={this.state.bgColor}
+                            onColorChanged={this.onColorChanged}
+                            alphaSliderHidden={true} />
+                    </div>
+                    <div className={styles.column}>
+                        <div style={{ width: "100px", height: "100px", backgroundColor: this.state.bgColor, borderStyle: "solid", borderWidth: "1px", borderColor: "#cdcdcd" }}>
+                        </div>
+                    </div>
+                </Panel>
             </div>
         );
     }
@@ -86,6 +119,66 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
             return "Title is required";
         }
         return "";
+    }
+
+    /**
+     * Adding buttons on footer of panel
+     *
+     * @private
+     * @returns {JSX.Element}
+     * @memberof ContentControl
+     */
+    private onPanelRenderFooterContent = (): JSX.Element => {
+        return (
+            <div>
+                <PrimaryButton onClick={this.onPanelColorSaved} style={{ marginRight: '8px' }}>
+                    Save
+                </PrimaryButton>
+                <DefaultButton onClick={this.onColorPickerPanelClose}>Cancel</DefaultButton>
+            </div>
+        );
+    }
+
+    /**
+     * On color picker panel closed.
+     *
+     * @private
+     * @memberof ContentControl
+     */
+    private onColorPickerPanelClose = (): void => {
+        this.setState({ showColorPanel: false });
+    }
+
+    /**
+     * Color selected.
+     * @private
+     * @memberof ContentControl
+     */
+    private onColorChanged = (color: string): void => {
+        this.setState({ bgColor: color });
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ContentControl
+     */
+    private onPanelColorSaved = (): void => {
+        const value = cloneDeep(this.state.value);
+        value.BackgroundColor = this.state.bgColor;
+        this.setState({ showColorPanel: false, value });
+        this.validate(value);
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ContentControl
+     */
+    private openBgColorPanel = (): void => {
+        this.setState({ showColorPanel: true, bgColor: this.state.value.BackgroundColor });
     }
 
     /**
