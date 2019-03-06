@@ -1,6 +1,6 @@
 import * as React from "react";
 import { IPropertyFieldEpChromeData, getEpChromeDataDefaultValues } from "../IPropertyFieldEpChrome";
-import { IPropertyPaneEpChromeHostProps, IPropertyPaneEpChromeHostState } from "./IPropertyPaneEpChromeHost";
+import { IPropertyPaneEpChromeHostProps, IPropertyPaneEpChromeHostState, ColorPickerType } from "./IPropertyPaneEpChromeHost";
 import styles from "./PropertyPaneEpChromeHost.module.scss";
 import { Toggle } from "office-ui-fabric-react/lib/Toggle";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
@@ -23,10 +23,11 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                 ShowTitle: typeof tempValue.ShowTitle === "undefined" ? defaultValues.ShowTitle : tempValue.ShowTitle,
                 Title: tempValue.Title || defaultValues.Title,
                 BackgroundColor: tempValue.BackgroundColor || defaultValues.BackgroundColor,
+                TextColor: tempValue.TextColor || defaultValues.TextColor,
             },
             showColorPanel: false,
             errorMessage: "",
-            bgColor: tempValue.BackgroundColor || defaultValues.BackgroundColor,
+            panelColor: "",
         };
     }
 
@@ -64,6 +65,15 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                 </div>
                 <div className={styles.row}>
                     <div className={styles.column}>
+                        <TextField label="Text Color"
+                            value={value.TextColor}
+                            readOnly={true}
+                            onClick={this.openTextColorPanel}
+                            iconProps={{ iconName: "Tag" }} />
+                    </div>
+                </div>
+                <div className={styles.row}>
+                    <div className={styles.column}>
                         <TextField label="Background Color"
                             value={value.BackgroundColor}
                             readOnly={true}
@@ -79,12 +89,18 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
                     closeButtonAriaLabel="Close"
                     onRenderFooterContent={this.onPanelRenderFooterContent}>
                     <div>
-                        <ColorPicker color={this.state.bgColor}
+                        <ColorPicker color={this.state.panelColor}
                             onColorChanged={this.onColorChanged}
                             alphaSliderHidden={true} />
                     </div>
                     <div className={styles.column}>
-                        <div style={{ width: "100px", height: "100px", backgroundColor: this.state.bgColor, borderStyle: "solid", borderWidth: "1px", borderColor: "#cdcdcd" }}>
+                        <div style={{
+                            width: "100px", height: "100px",
+                            backgroundColor: this.state.panelColor, 
+                            borderStyle: "solid", 
+                            borderWidth: "1px", 
+                            borderColor: "#cdcdcd"
+                        }}>
                         </div>
                     </div>
                 </Panel>
@@ -155,7 +171,7 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
      * @memberof ContentControl
      */
     private onColorChanged = (color: string): void => {
-        this.setState({ bgColor: color });
+        this.setState({ panelColor: color });
     }
 
     /**
@@ -166,7 +182,12 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
      */
     private onPanelColorSaved = (): void => {
         const value = cloneDeep(this.state.value);
-        value.BackgroundColor = this.state.bgColor;
+        if (this.state.panelType === ColorPickerType.background) {
+            value.BackgroundColor = this.state.panelColor;
+        }
+        if (this.state.panelType === ColorPickerType.text) {
+            value.TextColor = this.state.panelColor;
+        }
         this.setState({ showColorPanel: false, value });
         this.validate(value);
     }
@@ -178,7 +199,19 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
      * @memberof ContentControl
      */
     private openBgColorPanel = (): void => {
-        this.setState({ showColorPanel: true, bgColor: this.state.value.BackgroundColor });
+        this.setState({
+            showColorPanel: true,
+            panelColor: this.state.value.BackgroundColor,
+            panelType: ColorPickerType.background
+        });
+    }
+
+    private openTextColorPanel = (): void => {
+        this.setState({
+            showColorPanel: true,
+            panelColor: this.state.value.TextColor,
+            panelType: ColorPickerType.text
+        });
     }
 
     /**

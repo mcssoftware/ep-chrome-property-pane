@@ -80,7 +80,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
                                     },
                                     {
                                         key: listSelectionKey,
-                                        text: "Select Calendar(s)",
+                                        text: "Specific Calendar(s)",
                                         onRenderField: (props, render) => {
                                             return (
                                                 <div>

@@ -8,9 +8,15 @@ export interface IPropertyPaneEpChromeHostProps extends IPropertyFieldEpChromePr
     onChange: (targetProperty?: string, newValue?: IPropertyFieldEpChromeData) => void;
 }
 
+export enum ColorPickerType{
+    background=0,
+    text,
+}
+
 export interface IPropertyPaneEpChromeHostState {
     value: IPropertyFieldEpChromeData;
     errorMessage?: string;
     showColorPanel: boolean;
-    bgColor: string;
+    panelColor: string;
+    panelType?: ColorPickerType;
 }

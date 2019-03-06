@@ -139,7 +139,7 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
                         <div className={styles.column}>
                             <Dropdown
                                 disabled={forcedDisabled}
-                                label="Select List"
+                                label="Select Calendar"
                                 onChanged={this.onListSelectionDdlChanged}
                                 options={this.state.listOptions}
                                 selectedKey={this.state.value.ListId}
