@@ -32,7 +32,7 @@ export default class PropertPaneEpChromeHost extends React.Component<IPropertyPa
 
     public render(): JSX.Element {
         const { value } = this.state;
-        const label: string = this.props.label || "Ep Chrome Settings";
+        const label: string = this.props.label;
         return (
             <div className={styles.propertyPaneEpChromeHost}>
                 <Header title={label} />
