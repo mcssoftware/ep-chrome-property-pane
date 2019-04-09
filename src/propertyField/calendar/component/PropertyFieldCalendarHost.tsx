@@ -7,7 +7,6 @@ import FieldErrorMessage from "../../errorMessage/FieldErrorMessage";
 import { Async } from "office-ui-fabric-react/lib/Utilities";
 import { IDropdownOption, Dropdown } from "office-ui-fabric-react/lib/Dropdown";
 import { ISPService, ISPLists, ISPList } from "../../../services/ISPService";
-import { initGlobalVars } from "../../../common/ep";
 import { Spinner, SpinnerType } from "office-ui-fabric-react/lib/Spinner";
 import { ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react/lib/ChoiceGroup";
 import { cloneDeep } from "@microsoft/sp-lodash-subset";
@@ -19,9 +18,6 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
 
     constructor(props: IPropertyPaneCalendarHostProps) {
         super(props);
-        if (typeof window.Epmodern === "undefined") {
-            initGlobalVars();
-        }
         this.spService = props.spService;
         const tempValue: IPropertyFieldCalendarData = props.value || {} as IPropertyFieldCalendarData;
         const defaultValues = getCalendarDataDefaultValues();
@@ -67,7 +63,8 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
      * Loads the list from SharePoint calendar central
      */
     private loadLists(): void {
-        this.spService.getLists(this.props, window.Epmodern.urls.calendarCenterUrl).then((response: ISPLists) => {
+
+        this.spService.getLists(this.props, window.ElevatePoint.urls.calendarCenter).then((response: ISPLists) => {
             const options = [];
             // Start mapping the list that are selected
             response.value.map((list: ISPList) => {
@@ -103,7 +100,7 @@ export default class PropertyFieldCalendarHost extends React.Component<IProperty
             this.setState({ itemsLoaded: false, itemsDropDownOptions: this.getEmptyDropDownOption() });
             const now: string = new Date(Date.now()).toISOString();
             const filter: string = `EventDate ge '${now}'`;
-            this.spService.getListItems(filter, value.ListTitle, "Title", window.Epmodern.urls.calendarCenterUrl, "Title", 100)
+            this.spService.getListItems(filter, value.ListTitle, "Title", window.ElevatePoint.urls.calendarCenter, "Title", 100)
                 .then((items) => {
                     const itemsDropDownOptions: IDropdownOption[] = this.getEmptyDropDownOption();
                     items.filter((f) => typeof f.Title === "string" && f.Title.trim().length > 0).forEach(f => {

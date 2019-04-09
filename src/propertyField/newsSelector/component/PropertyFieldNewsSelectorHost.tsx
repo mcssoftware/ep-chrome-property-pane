@@ -17,7 +17,6 @@ import { ChoiceGroup, IChoiceGroupOption } from "office-ui-fabric-react/lib-es20
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib-es2015/Dropdown";
 import { ISPService } from "../../../services/ISPService";
 import Header from "../../header/header";
-import { initGlobalVars } from "../../../common/ep";
 
 /**
  * Image URLs / Base64
@@ -43,9 +42,6 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
    */
   constructor(props: IPropertyFieldNewsSelectorHostProps) {
     super(props);
-    if (typeof window.Epmodern === "undefined") {
-      initGlobalVars();
-    }
     this.termsService = props.termService;
     this.spService = props.spService;
     const activeValues = typeof this.props.value !== "undefined" ? this.props.value : getPropertyFieldNewsSelectorDefaultValue();
@@ -107,7 +103,7 @@ export default class PropertyFieldNewsSelectorHost extends React.Component<IProp
         `<Gt><FieldRef Name='News_x0020_Article_x0020_Expiration_x0020_Date' /><Value Type='DateTime'>${now}</Value></Gt></And>` +
         `<Eq><FieldRef Name='News_x0020_Channel' /><Value Type='TaxonomyFieldType'>${value.NewsChannel[0].name}</Value></Eq>` +
         "</And></Where></Query><ViewFields><FieldRef Name='ID' /><FieldRef Name='Title' /></ViewFields><RowLimit>200</RowLimit></View>";
-      this.spService.getListItemsCaml(camlQuery, "Pages", window.Epmodern.urls.newsUrl).then((pages) => {
+      this.spService.getListItemsCaml(camlQuery, "Pages", window.ElevatePoint.urls.newsCenterUrl).then((pages) => {
         const pageDropDownOptions: IDropdownOption[] = this.getEmptyDropDownOption();
         pages.filter((f) => typeof f.Title === "string" && f.Title.trim().length > 0).forEach(f => {
           pageDropDownOptions.push({

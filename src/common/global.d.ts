@@ -1,8 +1,9 @@
-// TODO: Refactor or eliminate
-import { IEpmodern } from "./ep";
+import { EP, IEpModern } from "./ep";
+
 declare global {
   interface Window {
-    Epmodern: IEpmodern;
+    ElevatePoint:EP;
+    EpModern: IEpModern;
   }
 }
-//window.EP = {};
+

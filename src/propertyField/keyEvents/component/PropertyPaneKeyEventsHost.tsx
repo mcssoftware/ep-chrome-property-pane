@@ -1,7 +1,6 @@
 import * as React from "react";
 import { IPropertyPaneKeyEventsHostProps, IPropertyPaneKeyEventsHostState } from "./IPropertyPaneKeyEventsHost";
 import { ISPService, ISPList, ISPLists } from "../../../services/ISPService";
-import { initGlobalVars } from "../../../common/ep";
 import { } from "../../../common/global";
 import { IPropertyFieldKeyEventsData, getKeyEventsDefaultValues } from "../IPropertyFieldKeyEvents";
 import styles from "./PropertyPaneKeyEventsHost.module.scss";
@@ -26,9 +25,6 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
 
     constructor(props: IPropertyPaneKeyEventsHostProps) {
         super(props);
-        if (typeof (window as any).Epmodern === "undefined") {
-            initGlobalVars();
-        }
         this.spService = props.spService;
         this.allListValue = [];
         this.async = new Async(this);
@@ -156,7 +152,7 @@ export default class PropertyFieldKeyEventsHost extends React.Component<IPropert
      * Loads the list from SharePoint calendar central
      */
     private loadLists(): void {
-        this.spService.getLists(this.props, window.Epmodern.urls.calendarCenterUrl).then((response: ISPLists) => {
+        this.spService.getLists(this.props, window.ElevatePoint.urls.calendarCenter).then((response: ISPLists) => {
             const options = [];
             this.allListValue = [];
             // Start mapping the list that are selected

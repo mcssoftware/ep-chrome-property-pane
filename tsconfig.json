@@ -12,7 +12,8 @@
     "outDir": "lib",
     "typeRoots": [
       "./node_modules/@types",
-      "./node_modules/@microsoft"
+      "./node_modules/@microsoft",
+      "./src/common/global"
     ],
     "types": [
       "es6-promise",

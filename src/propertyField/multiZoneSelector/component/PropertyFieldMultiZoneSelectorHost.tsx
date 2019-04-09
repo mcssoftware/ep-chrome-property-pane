@@ -8,7 +8,6 @@ import {
     IContentData,
     IVideoData
 } from "../IPropertyFieldMultiZoneSelector";
-import { initGlobalVars } from "../../../common/ep";
 import { IChoiceGroupOption, ChoiceGroup } from "office-ui-fabric-react/lib/ChoiceGroup";
 import styles from "./PropertyFieldMultiZoneSelectorHost.module.scss";
 import Header from "../../header/header";
@@ -38,9 +37,6 @@ export class PropertyFieldMultiZoneNewsSelectorHost extends React.Component<IPro
      */
     constructor(props: IPropertyFieldMultiZoneSelectorHostProps) {
         super(props);
-        if (typeof (window as any).Epmodern === "undefined") {
-            initGlobalVars();
-        }
         this.zoneOptions = [];
         const activeValues: ZoneDataHost[] = [];
 
